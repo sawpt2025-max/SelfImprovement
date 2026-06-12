@@ -1,5 +1,5 @@
 // sw.js — minimal offline cache for the app shell
-const CACHE_NAME = 'keystone-v2';
+const CACHE_NAME = 'shinpo-v4';
 const ASSETS = [
   './',
   './index.html',
@@ -8,6 +8,9 @@ const ASSETS = [
   './storage.js',
   './study.js',
   './checkin.js',
+  './atier.js',
+  './routines.js',
+  './calendar.js',
   './settings.js',
   './nav.js',
   './manifest.webmanifest',

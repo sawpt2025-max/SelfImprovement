@@ -1,7 +1,6 @@
-# Keystone — project brief for Claude Code
+# Shinpo — project brief for Claude Code
 
 Read this before any task. It is the contract for the whole project.
-(Working title "Keystone" — the user may rename; use whatever name they give.)
 
 ## What this is
 A private, single-user daily companion: study tracking + a tiny daily habit
@@ -39,9 +38,9 @@ The app is split into separate full-screen views, not one long page. Each
 screen exists so the user sees only what that moment needs — especially the
 pomodoro, which must be distraction-free.
 
-- **Home**: three buttons — Study / Work day / Rest day — plus a gear icon
-  (corner) for Settings. This is where the monkey placeholder lives (a calm
-  presence, nothing more).
+- **Home**: three buttons — Study / Work day / Rest day — plus a calendar icon
+  (corner) for the Calendar and a gear icon (corner) for Settings. This is
+  where the monkey placeholder lives (a calm presence, nothing more).
 - **Study**: ONLY the pomodoro (prominent), the weekly hours count (the
   highlight), and the 190h total behind a tap. Nothing else. Its own
   minimal/neutral look, distinct from the other screens, to hold focus.
@@ -52,6 +51,11 @@ pomodoro, which must be distraction-free.
   Same check-in, themed differently. Back to Home.
 - **Settings**: weekly target, total goal, and JSON export/import live here —
   not on the main screens.
+- **Calendar**: iPhone-style month grid, reachable from Home. Each day cell
+  shows only (a) a subtle dot for that day's day-type (work/rest) and (b) a
+  small checkmark if that day's S-tier items were all done/N-A. Prev/next
+  month navigation. A gentle look-back, not a streak — no "broken streak"
+  states, no red. Back to Home.
 
 ## Day type
 Tapping Work day or Rest day on Home records that as today's day-type and
@@ -90,9 +94,13 @@ calendar. It does NOT gate the daily check-in.
   button that flips it to Done.
 - A-tier (BONUS — visible, tickable, NEVER a miss, no red, no score):
   gym, vegetables, no doomscrolling, sunscreen + moisturiser, cold shower, cook.
-- Routines (gentle sequences, NOT scored):
+  Shown on the Work day / Rest day screens, clearly separated from and below
+  the S-tier list, under a "Bonus" heading. Simple checkbox toggles, no states.
+- Routines (gentle sequences, NOT scored, no failure state):
   - Morning (same daily): water, no phone on waking, natural light, moisturiser.
   - Night (same daily): read 10 min, water, retinol, moisturiser, magnesium.
+  Shown on the same day screens as simple checklists below the Bonus section,
+  under "Morning" and "Night" headings. Feed no score.
 
 ## Themes
 - Warm/light theme (build first): used by Home, Settings, and the Rest day
@@ -102,10 +110,6 @@ calendar. It does NOT gate the daily check-in.
   so the pomodoro stays distraction-free.
 - Full visual identity / polish pass comes later from Claude Design — these
   three are functional placeholders, not final art direction.
-
-## Calendar (Phase 2 — not now)
-iPhone-style month grid. Each day shows only its day type (work/rest/day-off) and
-whether that day's tracked items were done. Build only after the engine runs.
 
 ## V1 SCOPE — build ONLY this, get it working before anything else
 1. Home / Study / Work day / Rest day / Settings as separate screens (see
@@ -119,9 +123,13 @@ Warm/light, calm-dark, and neutral themes per screen as described above.
 Placeholder monkey on Home. localStorage + JSON export/import (in Settings) +
 installable PWA on iPhone/iPad.
 
-## Phase 2 — only after V1 runs on the user's phone, and only when told
-Calendar; day-type theming (work-dark skin); A-tier bonuses; morning/night
-routines; real monkey art + full visual identity from Claude Design.
+## Phase 2 — built
+Calendar (month grid, gentle look-back, day-type dot + S-tier checkmark per
+day); A-tier bonus checklist; morning/night routine checklists. Day-type
+theming (work-dark skin) was already part of V1.
+
+## Phase 3 — only when told
+Real monkey art + full visual identity from Claude Design.
 
 ## Working style
 - Smallest working version first. Build interactively; show small, reviewable diffs.

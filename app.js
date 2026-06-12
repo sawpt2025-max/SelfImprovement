@@ -11,11 +11,16 @@
   }
 
   Checkin.init(data, persist);
+  ATier.init(data, persist);
+  Routines.init(data, persist);
   Study.init(data, persist);
   Settings.init(data, persist, () => {
     Study.render();
     Checkin.render();
+    ATier.render();
+    Routines.render();
   });
+  Calendar.init(data);
   Nav.setup(data, persist);
   registerServiceWorker();
 })();

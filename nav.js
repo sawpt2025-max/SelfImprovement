@@ -26,7 +26,6 @@ const Nav = (() => {
   function openCheckin(dayType) {
     data.dayType.date = todayIso();
     data.dayType.type = dayType;
-    persist();
 
     const isWork = dayType === 'work';
     document.getElementById('checkin-screen').classList.toggle('theme-dark', isWork);
@@ -34,12 +33,21 @@ const Nav = (() => {
     document.getElementById('checkin-title').textContent = isWork ? 'Work day' : 'Rest day';
 
     Checkin.render();
+    ATier.render();
+    Routines.render();
+    Checkin.recordHistory();
+    persist();
     showScreen('checkin');
   }
 
   function openSettings() {
     Settings.render();
     showScreen('settings');
+  }
+
+  function openCalendar() {
+    Calendar.render();
+    showScreen('calendar');
   }
 
   function setup(sharedData, persistFn) {
@@ -50,6 +58,7 @@ const Nav = (() => {
     document.getElementById('nav-work').addEventListener('click', () => openCheckin('work'));
     document.getElementById('nav-rest').addEventListener('click', () => openCheckin('rest'));
     document.getElementById('open-settings').addEventListener('click', openSettings);
+    document.getElementById('open-calendar').addEventListener('click', openCalendar);
 
     document.querySelectorAll('[data-back]').forEach((btn) => {
       btn.addEventListener('click', goHome);

@@ -1,6 +1,6 @@
 {
-  "name": "Keystone",
-  "short_name": "Keystone",
+  "name": "Shinpo",
+  "short_name": "Shinpo",
   "description": "Study tracking and a tiny daily check-in.",
   "start_url": "./index.html",
   "scope": "./",

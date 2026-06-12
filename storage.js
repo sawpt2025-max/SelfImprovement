@@ -30,6 +30,34 @@ const DEFAULT_DATA = {
     date: null,
     type: null, // 'work' | 'rest' | 'off'
   },
+  aTier: {
+    date: null, // ISO date the current bonus state applies to
+    items: {
+      gym: false,
+      vegetables: false,
+      noDoomscroll: false,
+      sunscreen: false,
+      coldShower: false,
+      cook: false,
+    },
+  },
+  routines: {
+    date: null, // ISO date the current routine state applies to
+    morning: {
+      water: false,
+      noPhone: false,
+      light: false,
+      moisturiser: false,
+    },
+    night: {
+      read: false,
+      water: false,
+      retinol: false,
+      moisturiser: false,
+      magnesium: false,
+    },
+  },
+  history: {}, // { 'YYYY-MM-DD': { dayType, sTierDone } } — feeds the calendar
 };
 
 function loadData() {
@@ -48,7 +76,12 @@ function mergeDefaults(defaults, loaded) {
   for (const key of Object.keys(defaults)) {
     if (loaded[key] === undefined) continue;
     if (typeof defaults[key] === 'object' && defaults[key] !== null && !Array.isArray(defaults[key])) {
-      defaults[key] = mergeDefaults(defaults[key], loaded[key] || {});
+      if (Object.keys(defaults[key]).length === 0) {
+        // e.g. history: {} — a free-form date-keyed map, take it as-is
+        defaults[key] = loaded[key] || {};
+      } else {
+        defaults[key] = mergeDefaults(defaults[key], loaded[key] || {});
+      }
     } else {
       defaults[key] = loaded[key];
     }

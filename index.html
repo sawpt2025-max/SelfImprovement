@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1" />
-  <title>Keystone</title>
+  <title>Shinpo</title>
 
   <link rel="manifest" href="./manifest.webmanifest" />
   <meta name="theme-color" content="#faf3e8" />
@@ -11,7 +11,7 @@
   <!-- iOS install support -->
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-  <meta name="apple-mobile-web-app-title" content="Keystone" />
+  <meta name="apple-mobile-web-app-title" content="Shinpo" />
   <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png" />
 
   <link rel="stylesheet" href="./styles.css" />
@@ -20,13 +20,14 @@
 
   <!-- HOME -->
   <section class="screen" data-screen="home">
+    <button class="calendar-btn" id="open-calendar" aria-label="Calendar">📅</button>
     <button class="gear-btn" id="open-settings" aria-label="Settings">⚙</button>
     <div class="screen-content home-content">
       <div class="monkey-slot" aria-hidden="true">
         <!-- placeholder: real monkey art comes later from Claude Design -->
         <span class="monkey-placeholder">🐵</span>
       </div>
-      <h1 class="app-title">Keystone</h1>
+      <h1 class="app-title">Shinpo</h1>
       <div class="home-buttons">
         <button class="home-btn" id="nav-study">Study</button>
         <button class="home-btn" id="nav-work">Work day</button>
@@ -66,6 +67,41 @@
       <ul class="checkin-list" id="checkin-list">
         <!-- items injected by checkin.js -->
       </ul>
+
+      <h3 class="checkin-subheading">Bonus</h3>
+      <ul class="bonus-list" id="atier-list">
+        <!-- items injected by atier.js -->
+      </ul>
+
+      <h3 class="checkin-subheading">Morning</h3>
+      <ul class="bonus-list" id="morning-list">
+        <!-- items injected by routines.js -->
+      </ul>
+
+      <h3 class="checkin-subheading">Night</h3>
+      <ul class="bonus-list" id="night-list">
+        <!-- items injected by routines.js -->
+      </ul>
+    </div>
+  </section>
+
+  <!-- CALENDAR -->
+  <section class="screen hidden" data-screen="calendar">
+    <button class="back-btn" data-back>‹ Home</button>
+    <div class="screen-content calendar-content">
+      <div class="calendar-header">
+        <button class="link-btn" id="calendar-prev" aria-label="Previous month">‹</button>
+        <h2 id="calendar-month-label">Month Year</h2>
+        <button class="link-btn" id="calendar-next" aria-label="Next month">›</button>
+      </div>
+      <div class="calendar-grid" id="calendar-grid">
+        <!-- injected by calendar.js -->
+      </div>
+      <div class="calendar-legend">
+        <span><span class="calendar-dot calendar-dot-work"></span> Work day</span>
+        <span><span class="calendar-dot calendar-dot-rest"></span> Rest day</span>
+        <span><span class="calendar-check">✓</span> Tracked items done</span>
+      </div>
     </div>
   </section>
 
@@ -127,6 +163,9 @@
   <script src="./storage.js"></script>
   <script src="./study.js"></script>
   <script src="./checkin.js"></script>
+  <script src="./atier.js"></script>
+  <script src="./routines.js"></script>
+  <script src="./calendar.js"></script>
   <script src="./settings.js"></script>
   <script src="./nav.js"></script>
   <script src="./app.js"></script>

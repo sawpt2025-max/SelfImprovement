@@ -26,20 +26,36 @@ const Checkin = (() => {
 
   function setState(key, state) {
     data.checkin.items[key] = state;
+    recordHistory();
     persist();
     render();
   }
 
   function toggleNa(key) {
     data.checkin.na[key] = !data.checkin.na[key];
+    recordHistory();
     persist();
     render();
   }
 
   function markDone(key) {
     data.checkin.items[key] = 'done';
+    recordHistory();
     persist();
     render();
+  }
+
+  // --- calendar history ---
+  // Records, for today, the day-type and whether all S-tier items are
+  // done/N-A — the only things the calendar (Phase 2) shows per day.
+
+  function recordHistory() {
+    const today = todayIso();
+    const sTierDone = ITEMS.every(
+      ({ key }) => data.checkin.na[key] || data.checkin.items[key] === 'done'
+    );
+    const dayType = data.dayType.date === today ? data.dayType.type : null;
+    data.history[today] = { dayType, sTierDone };
   }
 
   // --- "doing it now" full screen ---
@@ -137,5 +153,5 @@ const Checkin = (() => {
     render();
   }
 
-  return { init, render, markDone };
+  return { init, render, markDone, recordHistory };
 })();
