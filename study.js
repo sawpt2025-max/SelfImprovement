@@ -57,7 +57,6 @@ const Study = (() => {
       `of ${formatHM(weeklyTargetMin)} this week`;
 
     renderTotalPopup();
-    renderSettingsInputs();
   }
 
   function renderTotalPopup() {
@@ -67,13 +66,6 @@ const Study = (() => {
     document.getElementById('total-progress-text').textContent =
       `${formatHM(total)} of ${formatHM(target)}`;
     document.getElementById('total-progress-fill').style.width = `${pct}%`;
-  }
-
-  function renderSettingsInputs() {
-    document.getElementById('weekly-target-input').value =
-      Math.round(data.settings.weeklyTargetMinutes / 60);
-    document.getElementById('total-target-input').value =
-      Math.round(data.settings.totalTargetMinutes / 60);
   }
 
   // --- duration selection ---
@@ -100,24 +92,6 @@ const Study = (() => {
 
     customInput.addEventListener('input', () => {
       selectedMinutes = parseInt(customInput.value, 10) || 0;
-    });
-  }
-
-  // --- settings ---
-
-  function setupSettings() {
-    document.getElementById('weekly-target-input').addEventListener('change', (e) => {
-      const hours = Math.max(1, parseInt(e.target.value, 10) || 1);
-      data.settings.weeklyTargetMinutes = hours * 60;
-      persist();
-      render();
-    });
-
-    document.getElementById('total-target-input').addEventListener('change', (e) => {
-      const hours = Math.max(1, parseInt(e.target.value, 10) || 1);
-      data.settings.totalTargetMinutes = hours * 60;
-      persist();
-      render();
     });
   }
 
@@ -301,7 +275,6 @@ const Study = (() => {
     persist = persistFn;
     checkWeeklyReset();
     setupDurationButtons();
-    setupSettings();
     setupTotalPopup();
     setupFocusScreen();
     render();

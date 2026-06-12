@@ -17,34 +17,32 @@
   <link rel="stylesheet" href="./styles.css" />
 </head>
 <body>
-  <div class="app">
 
-    <!-- Header -->
-    <header class="header">
+  <!-- HOME -->
+  <section class="screen" data-screen="home">
+    <button class="gear-btn" id="open-settings" aria-label="Settings">⚙</button>
+    <div class="screen-content home-content">
       <div class="monkey-slot" aria-hidden="true">
         <!-- placeholder: real monkey art comes later from Claude Design -->
         <span class="monkey-placeholder">🐵</span>
       </div>
-      <div class="header-main">
-        <h1 class="app-title">Keystone</h1>
-        <div class="day-type" id="day-type">
-          <button class="day-type-btn" data-type="work">Work</button>
-          <button class="day-type-btn" data-type="rest">Rest</button>
-          <button class="day-type-btn" data-type="off">Day off</button>
-        </div>
+      <h1 class="app-title">Keystone</h1>
+      <div class="home-buttons">
+        <button class="home-btn" id="nav-study">Study</button>
+        <button class="home-btn" id="nav-work">Work day</button>
+        <button class="home-btn" id="nav-rest">Rest day</button>
       </div>
-    </header>
+    </div>
+  </section>
 
-    <!-- Study -->
-    <section class="card study-card">
-      <div class="study-header">
-        <h2>Study</h2>
-        <button class="link-btn" id="open-total-popup">190h total</button>
-      </div>
-
+  <!-- STUDY -->
+  <section class="screen theme-neutral hidden" data-screen="study">
+    <button class="back-btn" data-back>‹ Home</button>
+    <div class="screen-content study-content">
       <div class="weekly-display">
         <div class="weekly-hours" id="weekly-hours">0h 0m</div>
         <div class="weekly-target" id="weekly-target-label">of 12h this week</div>
+        <button class="link-btn" id="open-total-popup">190h total</button>
       </div>
 
       <div class="pomodoro">
@@ -57,18 +55,24 @@
         <input type="number" id="custom-minutes" class="custom-minutes hidden" min="1" max="240" placeholder="minutes" />
         <button class="primary-btn" id="start-session">Start session</button>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- Check-in -->
-    <section class="card checkin-card">
-      <h2>Today</h2>
+  <!-- CHECK-IN (Work day / Rest day) -->
+  <section class="screen hidden" data-screen="checkin" id="checkin-screen">
+    <button class="back-btn" data-back>‹ Home</button>
+    <div class="screen-content checkin-content">
+      <h2 id="checkin-title">Today</h2>
       <ul class="checkin-list" id="checkin-list">
         <!-- items injected by checkin.js -->
       </ul>
-    </section>
+    </div>
+  </section>
 
-    <!-- Settings -->
-    <section class="card settings-card">
+  <!-- SETTINGS -->
+  <section class="screen hidden" data-screen="settings">
+    <button class="back-btn" data-back>‹ Home</button>
+    <div class="screen-content settings-content">
       <h2>Settings</h2>
       <div class="settings-row">
         <label for="weekly-target-input">Weekly target (hours)</label>
@@ -85,9 +89,8 @@
           <input type="file" id="import-input" accept="application/json" class="hidden" />
         </label>
       </div>
-    </section>
-
-  </div>
+    </div>
+  </section>
 
   <!-- Total progress popup -->
   <div class="overlay hidden" id="total-popup">
@@ -100,7 +103,7 @@
   </div>
 
   <!-- Full-screen pomodoro focus -->
-  <div class="overlay fullscreen hidden" id="focus-screen">
+  <div class="overlay fullscreen theme-neutral hidden" id="focus-screen">
     <div class="focus-content">
       <div class="focus-time" id="focus-time">25:00</div>
       <div class="focus-label" id="focus-label">Focus</div>
@@ -124,6 +127,8 @@
   <script src="./storage.js"></script>
   <script src="./study.js"></script>
   <script src="./checkin.js"></script>
+  <script src="./settings.js"></script>
+  <script src="./nav.js"></script>
   <script src="./app.js"></script>
 </body>
 </html>

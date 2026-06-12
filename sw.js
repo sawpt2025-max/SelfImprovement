@@ -1,5 +1,5 @@
 // sw.js — minimal offline cache for the app shell
-const CACHE_NAME = 'keystone-v1';
+const CACHE_NAME = 'keystone-v2';
 const ASSETS = [
   './',
   './index.html',
@@ -8,6 +8,8 @@ const ASSETS = [
   './storage.js',
   './study.js',
   './checkin.js',
+  './settings.js',
+  './nav.js',
   './manifest.webmanifest',
   './icons/icon-192.png',
   './icons/icon-512.png',

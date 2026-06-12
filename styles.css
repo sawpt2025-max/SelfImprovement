@@ -1,6 +1,7 @@
-/* Keystone — warm/light theme (V1) */
+/* Keystone — screen-based layout, three themes (V1) */
 
 :root {
+  /* warm/light — Home, Settings, Rest day check-in */
   --bg: #faf3e8;
   --card: #ffffff;
   --ink: #3a332c;
@@ -8,7 +9,6 @@
   --accent: #c9803f;
   --accent-soft: #f1ddc4;
   --done: #7e9e6e;
-  --progress: #d8a23a;
   --miss: #c97a6a;
   --border: #ece2d4;
   --radius: 16px;
@@ -26,100 +26,139 @@ html, body {
 
 body {
   font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
-  background: var(--bg);
-  color: var(--ink);
   -webkit-font-smoothing: antialiased;
 }
 
-.app {
-  max-width: 480px;
-  margin: 0 auto;
-  padding: env(safe-area-inset-top, 16px) 16px calc(env(safe-area-inset-bottom, 16px) + 16px);
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
+.hidden {
+  display: none !important;
 }
 
-/* Header */
-.header {
+/* --- Screens --- */
+
+.screen {
+  min-height: 100dvh;
+  background: var(--bg);
+  color: var(--ink);
   display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.screen-content {
+  flex: 1;
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+.back-btn {
+  align-self: flex-start;
+  margin: env(safe-area-inset-top, 12px) 0 0 16px;
+  background: none;
+  border: none;
+  color: var(--accent);
+  font-size: 1rem;
+  padding: 8px 4px;
+  cursor: pointer;
+}
+
+.gear-btn {
+  position: absolute;
+  top: calc(env(safe-area-inset-top, 12px) + 12px);
+  right: 16px;
+  background: none;
+  border: none;
+  font-size: 1.4rem;
+  color: var(--muted);
+  cursor: pointer;
+  padding: 6px;
+  line-height: 1;
+}
+
+/* --- Home --- */
+
+.home-content {
+  justify-content: center;
   align-items: center;
-  gap: 14px;
-  padding-top: 8px;
+  gap: 24px;
+  text-align: center;
+  padding-top: env(safe-area-inset-top, 16px);
 }
 
 .monkey-slot {
-  width: 56px;
-  height: 56px;
+  width: 88px;
+  height: 88px;
   border-radius: 50%;
   background: var(--accent-soft);
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-shrink: 0;
 }
 
 .monkey-placeholder {
-  font-size: 30px;
+  font-size: 46px;
   line-height: 1;
-}
-
-.header-main {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
 }
 
 .app-title {
   margin: 0;
-  font-size: 1.3rem;
+  font-size: 1.6rem;
   font-weight: 600;
 }
 
-.day-type {
+.home-buttons {
   display: flex;
-  gap: 6px;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  margin-top: 12px;
 }
 
-.day-type-btn {
+.home-btn {
+  width: 100%;
+  padding: 18px;
+  border-radius: 14px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
   border: 1px solid var(--border);
   background: var(--card);
-  color: var(--muted);
-  border-radius: 999px;
-  padding: 4px 12px;
-  font-size: 0.8rem;
-  cursor: pointer;
+  color: var(--ink);
 }
 
-.day-type-btn.selected {
-  background: var(--accent-soft);
-  color: var(--ink);
+.home-btn#nav-study {
+  background: var(--accent);
+  color: #fff;
   border-color: var(--accent);
 }
 
-/* Cards */
-.card {
-  background: var(--card);
-  border-radius: var(--radius);
-  padding: 18px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+/* --- Study --- */
+
+.study-content {
+  justify-content: center;
+  gap: 36px;
 }
 
-.card h2 {
-  margin: 0 0 12px;
-  font-size: 1.05rem;
-  font-weight: 600;
-}
-
-/* Study card */
-.study-header {
+.weekly-display {
+  text-align: center;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: space-between;
+  gap: 6px;
 }
 
-.study-header h2 {
-  margin: 0;
+.weekly-hours {
+  font-size: 4rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.weekly-target {
+  color: var(--muted);
+  font-size: 0.95rem;
 }
 
 .link-btn {
@@ -128,31 +167,14 @@ body {
   color: var(--accent);
   font-size: 0.9rem;
   cursor: pointer;
-  padding: 4px;
-}
-
-.weekly-display {
-  text-align: center;
-  margin: 14px 0 20px;
-}
-
-.weekly-hours {
-  font-size: 3rem;
-  font-weight: 700;
-  line-height: 1;
-}
-
-.weekly-target {
-  color: var(--muted);
-  font-size: 0.9rem;
+  padding: 6px;
   margin-top: 4px;
 }
 
-/* Pomodoro */
 .pomodoro {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
 }
 
 .pomodoro-durations {
@@ -163,11 +185,11 @@ body {
 .duration-btn {
   flex: 1;
   border: 1px solid var(--border);
-  background: var(--bg);
+  background: var(--card);
   color: var(--ink);
   border-radius: 12px;
-  padding: 10px 0;
-  font-size: 1rem;
+  padding: 14px 0;
+  font-size: 1.05rem;
   cursor: pointer;
 }
 
@@ -179,11 +201,11 @@ body {
 
 .custom-minutes {
   width: 100%;
-  padding: 10px;
+  padding: 12px;
   border: 1px solid var(--border);
   border-radius: 12px;
   font-size: 1rem;
-  background: var(--bg);
+  background: var(--card);
   color: var(--ink);
 }
 
@@ -192,14 +214,14 @@ body {
   color: #fff;
   border: none;
   border-radius: 12px;
-  padding: 14px;
-  font-size: 1.05rem;
+  padding: 16px;
+  font-size: 1.1rem;
   font-weight: 600;
   cursor: pointer;
 }
 
 .secondary-btn {
-  background: var(--bg);
+  background: var(--card);
   color: var(--ink);
   border: 1px solid var(--border);
   border-radius: 12px;
@@ -219,7 +241,14 @@ body {
   cursor: pointer;
 }
 
-/* Check-in */
+/* --- Check-in --- */
+
+.checkin-content h2 {
+  margin: 4px 0 16px;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
 .checkin-list {
   list-style: none;
   margin: 0;
@@ -233,19 +262,20 @@ body {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  padding: 12px;
+  padding: 14px;
   border: 1px solid var(--border);
   border-radius: 12px;
+  background: var(--card);
 }
 
 .checkin-item.state-done {
   border-color: var(--done);
-  background: color-mix(in srgb, var(--done) 10%, var(--card));
+  background: color-mix(in srgb, var(--done) 12%, var(--card));
 }
 
 .checkin-item.state-missed {
   border-color: var(--miss);
-  background: color-mix(in srgb, var(--miss) 8%, var(--card));
+  background: color-mix(in srgb, var(--miss) 10%, var(--card));
 }
 
 .checkin-item.state-na {
@@ -254,7 +284,6 @@ body {
 
 .checkin-item-name {
   font-weight: 500;
-  flex: 1;
 }
 
 .checkin-controls {
@@ -280,17 +309,20 @@ body {
   font-weight: 600;
 }
 
-/* Settings */
+/* --- Settings --- */
+
+.settings-content h2 {
+  margin: 4px 0 16px;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
 .settings-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  margin-bottom: 12px;
-}
-
-.settings-row:last-child {
-  margin-bottom: 0;
+  margin-bottom: 14px;
 }
 
 .settings-row label {
@@ -303,7 +335,7 @@ body {
   border: 1px solid var(--border);
   border-radius: 10px;
   font-size: 1rem;
-  background: var(--bg);
+  background: var(--card);
   color: var(--ink);
   text-align: center;
 }
@@ -322,11 +354,8 @@ body {
   justify-content: center;
 }
 
-.hidden {
-  display: none !important;
-}
+/* --- Overlays --- */
 
-/* Overlays */
 .overlay {
   position: fixed;
   inset: 0;
@@ -340,6 +369,7 @@ body {
 
 .overlay.fullscreen {
   background: var(--bg);
+  color: var(--ink);
 }
 
 .popup {
@@ -352,6 +382,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 16px;
+  color: var(--ink);
 }
 
 .total-progress-text {
@@ -373,7 +404,8 @@ body {
   transition: width 0.3s ease;
 }
 
-/* Full-screen focus */
+/* Full-screen focus / doing-it-now content */
+
 .focus-content {
   display: flex;
   flex-direction: column;
@@ -428,23 +460,51 @@ body {
   width: 100%;
 }
 
-/* iPad / wider screens: roomier layout */
+/* --- Themes --- */
+
+/* Calm-dark — Work day check-in. Focused, not bleak. */
+.theme-dark {
+  --bg: #232730;
+  --card: #2c313b;
+  --ink: #ece7de;
+  --muted: #9aa1ad;
+  --accent: #d2a35c;
+  --accent-soft: #3c3a2e;
+  --done: #7fae7a;
+  --miss: #d98f80;
+  --border: #3a3f4a;
+}
+
+/* Neutral/minimal — Study screen + pomodoro focus, distraction-free */
+.theme-neutral {
+  --bg: #f4f2ee;
+  --card: #fbfaf8;
+  --ink: #4a463f;
+  --muted: #a39d92;
+  --accent: #8c8475;
+  --accent-soft: #e7e3da;
+  --done: #8a9a82;
+  --miss: #b98b80;
+  --border: #e6e2da;
+}
+
+/* --- iPad / wider screens --- */
+
 @media (min-width: 700px) {
   :root {
     font-size: 18px;
   }
-  .app {
+  .screen-content {
     max-width: 640px;
-    padding-top: 32px;
-    gap: 22px;
-  }
-  .card {
-    padding: 28px;
+    padding: 32px;
   }
   .weekly-hours {
-    font-size: 4rem;
+    font-size: 5.5rem;
   }
   .focus-time {
     font-size: 7rem;
+  }
+  .app-title {
+    font-size: 2rem;
   }
 }

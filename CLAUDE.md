@@ -34,11 +34,31 @@ A calm, silly, hand-drawn monkey. Charm, not leverage. Hard rules:
 - Manual JSON export/import so data can never be silently lost.
 - Responsive: works on iPhone and iPad (iPad may use a roomier layout — same app).
 
+## Screens (V1)
+The app is split into separate full-screen views, not one long page. Each
+screen exists so the user sees only what that moment needs — especially the
+pomodoro, which must be distraction-free.
+
+- **Home**: three buttons — Study / Work day / Rest day — plus a gear icon
+  (corner) for Settings. This is where the monkey placeholder lives (a calm
+  presence, nothing more).
+- **Study**: ONLY the pomodoro (prominent), the weekly hours count (the
+  highlight), and the 190h total behind a tap. Nothing else. Its own
+  minimal/neutral look, distinct from the other screens, to hold focus.
+  Back to Home.
+- **Work day / Rest day**: the S-tier daily check-in. Tapping either button on
+  Home records that as today's day-type, then opens this screen. Work day uses
+  a calm-dark theme (focused, not bleak); Rest day uses the warm/light theme.
+  Same check-in, themed differently. Back to Home.
+- **Settings**: weekly target, total goal, and JSON export/import live here —
+  not on the main screens.
+
 ## Day type
-On open, the user can tag the day: Work / Rest / Day off. Study is available in
-EVERY mode (morning study before a late shift counts). For V1 the tag is
-lightweight — it records the day type (for the future calendar) and later switches
-the theme. It does NOT gate the daily check-in.
+Tapping Work day or Rest day on Home records that as today's day-type and
+opens the check-in screen in the matching theme. Study is available
+regardless of day-type (morning study before a late shift counts). The V1 tag
+is lightweight — mainly it picks the check-in theme and (later) feeds the
+calendar. It does NOT gate the daily check-in.
 
 ## Study engine (the heart — build first)
 - Two counters, both count UP:
@@ -74,22 +94,29 @@ the theme. It does NOT gate the daily check-in.
   - Morning (same daily): water, no phone on waking, natural light, moisturiser.
   - Night (same daily): read 10 min, water, retinol, moisturiser, magnesium.
 
-## Themes (polish, not V1)
-- Rest/study theme (build first): warm, light, calm, study-ready.
-- Work-day theme (later): calm-dark and focused — NOT bleak or grim.
-- Theme follows the day tag.
+## Themes
+- Warm/light theme (build first): used by Home, Settings, and the Rest day
+  check-in. Calm, study-ready.
+- Calm-dark theme: used by the Work day check-in — focused, NOT bleak or grim.
+- Neutral/minimal theme: the Study screen's own look, distinct from the above
+  so the pomodoro stays distraction-free.
+- Full visual identity / polish pass comes later from Claude Design — these
+  three are functional placeholders, not final art direction.
 
 ## Calendar (Phase 2 — not now)
 iPhone-style month grid. Each day shows only its day type (work/rest/day-off) and
 whether that day's tracked items were done. Build only after the engine runs.
 
 ## V1 SCOPE — build ONLY this, get it working before anything else
-1. Study page: count-up weekly (12h default) + 190h total popup + pomodoro
+1. Home / Study / Work day / Rest day / Settings as separate screens (see
+   Screens section above).
+2. Study screen: count-up weekly (12h default) + 190h total popup + pomodoro
    (25/30 default, 60, custom; partial credit; pause/cancel; chime; notes;
    full-screen focus).
-2. S-tier daily check-in (3 items, 3 states + "N/A today", full-screen
-   "doing it now").
-One warm/light theme. Placeholder monkey. localStorage + JSON export/import +
+3. S-tier daily check-in (3 items, 3 states + "N/A today", full-screen
+   "doing it now") on the Work day / Rest day screens.
+Warm/light, calm-dark, and neutral themes per screen as described above.
+Placeholder monkey on Home. localStorage + JSON export/import (in Settings) +
 installable PWA on iPhone/iPad.
 
 ## Phase 2 — only after V1 runs on the user's phone, and only when told
