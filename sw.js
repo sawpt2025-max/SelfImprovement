@@ -1,5 +1,5 @@
 // sw.js — minimal offline cache for the app shell
-const CACHE_NAME = 'shinpo-v5';
+const CACHE_NAME = 'shinpo-v6';
 const ASSETS = [
   './',
   './index.html',
@@ -18,6 +18,7 @@ const ASSETS = [
   './icons/icon-192.png',
   './icons/icon-512.png',
   './icons/apple-touch-icon.png',
+  './icons/Gear-icon.png',
   './icons/monkey/pro.png',
   './icons/monkey/pomodoro.png',
   './icons/monkey/focus.png',

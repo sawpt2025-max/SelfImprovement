@@ -132,11 +132,12 @@ body {
 }
 
 .icon-btn {
-  width: 40px; height: 40px; border-radius: var(--r-pill);
+  width: 44px; height: 44px; border-radius: var(--r-pill);
   display: flex; align-items: center; justify-content: center;
   background: none; border: none; color: var(--text); cursor: pointer; padding: 0;
 }
 .icon-btn svg { width: 22px; height: 22px; }
+.icon-btn img { width: 22px; height: 22px; object-fit: contain; }
 
 .nav-back {
   display: flex; align-items: center; gap: 0;
@@ -188,6 +189,7 @@ body {
 .action-tile-dark {
   background: var(--card-dark); border-color: rgba(255,255,255,0.06); color: #fff;
 }
+.action-tile-dark .tile-name { color: #fff; }
 .action-tile-dark .tile-desc { color: var(--on-dark-60); }
 .action-tile-dark .tile-chevron { color: var(--on-dark-30); }
 
@@ -429,8 +431,6 @@ body {
   font-family: var(--font); font-size: 17px; text-align: right; font-variant-numeric: tabular-nums;
 }
 .settings-note { padding: 8px 6px 0; }
-
-.file-label { display: contents; }
 
 .settings-footer {
   display: flex; flex-direction: column; align-items: center; padding-top: 40px;

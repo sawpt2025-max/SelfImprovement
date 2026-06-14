@@ -22,7 +22,7 @@
   <section class="screen surface-parchment" data-screen="home">
     <div class="topbar">
       <button class="icon-btn" id="open-settings" aria-label="Settings">
-        <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3.2" stroke="currentColor" stroke-width="1.9"/><path d="M19.4 13a1.6 1.6 0 00.3 1.8l.1.1a2 2 0 11-2.8 2.8l-.1-.1a1.6 1.6 0 00-1.8-.3 1.6 1.6 0 00-1 1.5V21a2 2 0 11-4 0v-.1a1.6 1.6 0 00-1-1.5 1.6 1.6 0 00-1.8.3l-.1.1a2 2 0 11-2.8-2.8l.1-.1a1.6 1.6 0 00.3-1.8 1.6 1.6 0 00-1.5-1H3a2 2 0 110-4h.1a1.6 1.6 0 001.5-1 1.6 1.6 0 00-.3-1.8l-.1-.1a2 2 0 112.8-2.8l.1.1a1.6 1.6 0 001.8.3H9a1.6 1.6 0 001-1.5V3a2 2 0 114 0v.1a1.6 1.6 0 001 1.5 1.6 1.6 0 001.8-.3l.1-.1a2 2 0 112.8 2.8l-.1.1a1.6 1.6 0 00-.3 1.8V9a1.6 1.6 0 001.5 1H21a2 2 0 110 4h-.1a1.6 1.6 0 00-1.5 1z" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <img src="./icons/Gear-icon.png" alt="" />
       </button>
       <button class="icon-btn" id="open-calendar" aria-label="Calendar">
         <svg viewBox="0 0 24 24" fill="none"><rect x="3.5" y="4.5" width="17" height="16" rx="3" stroke="currentColor" stroke-width="1.9"/><path d="M7 3v3M17 3v3M3.5 9.5h17" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg>
@@ -159,6 +159,10 @@
 
   <!-- CALENDAR -->
   <section class="screen surface-canvas hidden" data-screen="calendar">
+    <button class="nav-back" data-back>
+      <svg viewBox="0 0 24 24" fill="none"><path d="M15 5l-7 7 7 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>Home</span>
+    </button>
     <div class="cal-nav">
       <button class="icon-btn" id="calendar-prev" aria-label="Previous month">
         <svg viewBox="0 0 24 24" fill="none"><path d="M15 5l-7 7 7 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -218,7 +222,7 @@
           <div class="row-title">Export data</div>
           <span class="row-chevron"><svg viewBox="0 0 24 24" fill="none"><path d="M9 5l7 7-7 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
         </div>
-        <label class="group-row settings-row last file-label" for="import-input">
+        <label class="group-row settings-row last" for="import-input">
           <span class="row-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3.6V15M8 11l4 4 4-4" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/><path d="M5.5 13.5V19a1.5 1.5 0 001.5 1.5h10a1.5 1.5 0 001.5-1.5v-5.5" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg></span>
           <div class="row-title">Import data</div>
           <span class="row-chevron"><svg viewBox="0 0 24 24" fill="none"><path d="M9 5l7 7-7 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
