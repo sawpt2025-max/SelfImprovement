@@ -50,30 +50,22 @@ const Calendar = (() => {
 
       const cell = document.createElement('div');
       cell.className = 'calendar-day';
-      if (iso === today) cell.classList.add('calendar-day-today');
 
-      const num = document.createElement('div');
-      num.className = 'calendar-day-num';
-      num.textContent = String(day);
-      cell.appendChild(num);
+      const circle = document.createElement('div');
+      circle.className = 'cal-circle';
 
-      const marks = document.createElement('div');
-      marks.className = 'calendar-day-marks';
-
-      if (entry && entry.dayType) {
-        const dot = document.createElement('span');
-        dot.className = `calendar-dot calendar-dot-${entry.dayType}`;
-        marks.appendChild(dot);
+      if (entry && entry.dayType === 'work') {
+        circle.classList.add(entry.sTierDone ? 'cal-circle-work-done' : 'cal-circle-work');
+      } else if (entry && entry.dayType === 'rest') {
+        circle.classList.add(entry.sTierDone ? 'cal-circle-rest-done' : 'cal-circle-rest');
+      } else if (iso === today) {
+        circle.classList.add('cal-circle-today');
+      } else {
+        circle.classList.add('cal-plain');
       }
 
-      if (entry && entry.sTierDone) {
-        const check = document.createElement('span');
-        check.className = 'calendar-check';
-        check.textContent = '✓';
-        marks.appendChild(check);
-      }
-
-      cell.appendChild(marks);
+      circle.textContent = String(day);
+      cell.appendChild(circle);
       grid.appendChild(cell);
     }
   }

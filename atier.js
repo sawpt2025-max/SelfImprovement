@@ -45,23 +45,33 @@ const ATier = (() => {
     const list = document.getElementById('atier-list');
     list.innerHTML = '';
 
-    ITEMS.forEach(({ key, label }) => {
-      const li = document.createElement('li');
-      li.className = 'bonus-item';
+    ITEMS.forEach(({ key, label }, i) => {
+      const checked = !!data.aTier.items[key];
+
+      const row = document.createElement('div');
+      row.className = 'check-item-row';
+      if (i === ITEMS.length - 1) row.classList.add('last');
 
       const btn = document.createElement('button');
-      btn.className = 'bonus-check';
-      btn.classList.toggle('checked', !!data.aTier.items[key]);
-      btn.setAttribute('aria-label', label);
+      btn.className = 'check-item';
+      if (checked) btn.classList.add('checked');
       btn.addEventListener('click', () => toggle(key));
 
+      const circle = document.createElement('span');
+      circle.className = 'check-circle';
+      if (checked) {
+        circle.classList.add('checked');
+        circle.innerHTML = Icons.check;
+      }
+
       const name = document.createElement('span');
-      name.className = 'bonus-label';
+      name.className = 'check-label';
       name.textContent = label;
 
-      li.appendChild(btn);
-      li.appendChild(name);
-      list.appendChild(li);
+      btn.appendChild(circle);
+      btn.appendChild(name);
+      row.appendChild(btn);
+      list.appendChild(row);
     });
   }
 

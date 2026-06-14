@@ -10,6 +10,10 @@ const Settings = (() => {
       Math.round(data.settings.weeklyTargetMinutes / 60);
     document.getElementById('total-target-input').value =
       Math.round(data.settings.totalTargetMinutes / 60);
+
+    const hours = data.study.totalMinutes / 60;
+    const rounded = Number.isInteger(hours) ? hours : Math.round(hours * 10) / 10;
+    document.getElementById('banked-total').textContent = `${rounded}h`;
   }
 
   function setupTargets() {

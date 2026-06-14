@@ -6,7 +6,7 @@
   <title>Shinpo</title>
 
   <link rel="manifest" href="./manifest.webmanifest" />
-  <meta name="theme-color" content="#faf3e8" />
+  <meta name="theme-color" content="#f5f5f7" />
 
   <!-- iOS install support -->
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -19,34 +19,79 @@
 <body>
 
   <!-- HOME -->
-  <section class="screen" data-screen="home">
-    <button class="calendar-btn" id="open-calendar" aria-label="Calendar">📅</button>
-    <button class="gear-btn" id="open-settings" aria-label="Settings">⚙</button>
+  <section class="screen surface-parchment" data-screen="home">
+    <div class="topbar">
+      <button class="icon-btn" id="open-settings" aria-label="Settings">
+        <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3.2" stroke="currentColor" stroke-width="1.9"/><path d="M19.4 13a1.6 1.6 0 00.3 1.8l.1.1a2 2 0 11-2.8 2.8l-.1-.1a1.6 1.6 0 00-1.8-.3 1.6 1.6 0 00-1 1.5V21a2 2 0 11-4 0v-.1a1.6 1.6 0 00-1-1.5 1.6 1.6 0 00-1.8.3l-.1.1a2 2 0 11-2.8-2.8l.1-.1a1.6 1.6 0 00.3-1.8 1.6 1.6 0 00-1.5-1H3a2 2 0 110-4h.1a1.6 1.6 0 001.5-1 1.6 1.6 0 00-.3-1.8l-.1-.1a2 2 0 112.8-2.8l.1.1a1.6 1.6 0 001.8.3H9a1.6 1.6 0 001-1.5V3a2 2 0 114 0v.1a1.6 1.6 0 001 1.5 1.6 1.6 0 001.8-.3l.1-.1a2 2 0 112.8 2.8l-.1.1a1.6 1.6 0 00-.3 1.8V9a1.6 1.6 0 001.5 1H21a2 2 0 110 4h-.1a1.6 1.6 0 00-1.5 1z" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <button class="icon-btn" id="open-calendar" aria-label="Calendar">
+        <svg viewBox="0 0 24 24" fill="none"><rect x="3.5" y="4.5" width="17" height="16" rx="3" stroke="currentColor" stroke-width="1.9"/><path d="M7 3v3M17 3v3M3.5 9.5h17" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg>
+      </button>
+    </div>
     <div class="screen-content home-content">
-      <div class="monkey-slot" aria-hidden="true">
-        <!-- placeholder: real monkey art comes later from Claude Design -->
-        <span class="monkey-placeholder">🐵</span>
+      <div class="home-mascot" aria-hidden="true">
+        <img class="monkey monkey-pro" src="./icons/monkey/pro.png" alt="" />
+        <div class="t-tagline">Good morning</div>
+        <div class="t-caption muted">A quiet day to make progress.</div>
       </div>
-      <h1 class="app-title">Shinpo</h1>
-      <div class="home-buttons">
-        <button class="home-btn" id="nav-study">Study</button>
-        <button class="home-btn" id="nav-work">Work day</button>
-        <button class="home-btn" id="nav-rest">Rest day</button>
+      <div class="action-tiles">
+        <button class="action-tile" id="nav-study">
+          <div class="tile-body">
+            <div class="tile-name">Study</div>
+            <div class="tile-desc">Bank focused hours</div>
+          </div>
+          <span class="tile-chevron"><svg viewBox="0 0 24 24" fill="none"><path d="M9 5l7 7-7 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        </button>
+        <button class="action-tile action-tile-dark" id="nav-work">
+          <div class="tile-body">
+            <div class="tile-name">Work day</div>
+            <div class="tile-desc">Today's check-in</div>
+          </div>
+          <span class="tile-chevron"><svg viewBox="0 0 24 24" fill="none"><path d="M9 5l7 7-7 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        </button>
+        <button class="action-tile" id="nav-rest">
+          <div class="tile-body">
+            <div class="tile-name">Rest day</div>
+            <div class="tile-desc">A lighter check-in</div>
+          </div>
+          <span class="tile-chevron"><svg viewBox="0 0 24 24" fill="none"><path d="M9 5l7 7-7 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        </button>
       </div>
     </div>
   </section>
 
   <!-- STUDY -->
-  <section class="screen theme-neutral hidden" data-screen="study">
-    <button class="back-btn" data-back>‹ Home</button>
+  <section class="screen surface-canvas hidden" data-screen="study">
+    <button class="nav-back" data-back>
+      <svg viewBox="0 0 24 24" fill="none"><path d="M15 5l-7 7 7 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>Home</span>
+    </button>
     <div class="screen-content study-content">
-      <div class="weekly-display">
-        <div class="weekly-hours" id="weekly-hours">0h 0m</div>
-        <div class="weekly-target" id="weekly-target-label">of 12h this week</div>
-        <button class="link-btn" id="open-total-popup">190h total</button>
+      <h1 class="screen-title t-display-md">Study</h1>
+
+      <div class="study-hero">
+        <div class="label-caps">This week</div>
+        <div class="hero-row">
+          <span class="hero-number num" id="weekly-hours">0h 0m</span>
+          <span class="hero-target" id="weekly-target-label">/ 12h</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-bar-fill" id="weekly-progress-fill"></div>
+        </div>
+        <div class="t-caption muted" id="weekly-remaining">12h to your weekly target.</div>
       </div>
 
-      <div class="pomodoro">
+      <div class="divider"></div>
+
+      <div class="pomodoro-section">
+        <div class="label-caps">Pomodoro</div>
+        <div class="pomodoro-row">
+          <img class="monkey monkey-pomodoro" src="./icons/monkey/pomodoro.png" alt="" />
+          <div class="pomodoro-info">
+            <div class="t-body">Focus session</div>
+            <div class="t-caption muted" id="pomodoro-desc">30 min · then a 5 min break</div>
+          </div>
+        </div>
         <div class="pomodoro-durations" id="pomodoro-durations">
           <button class="duration-btn" data-minutes="25">25</button>
           <button class="duration-btn selected" data-minutes="30">30</button>
@@ -54,76 +99,139 @@
           <button class="duration-btn" data-minutes="custom">Custom</button>
         </div>
         <input type="number" id="custom-minutes" class="custom-minutes hidden" min="1" max="240" placeholder="minutes" />
-        <button class="primary-btn" id="start-session">Start session</button>
+        <button class="primary-pill full" id="start-session">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M8 5.5v13l11-6.5z" fill="currentColor"/></svg>
+          Start focus
+        </button>
+      </div>
+
+      <div class="group-header"><span></span></div>
+      <div class="group-card">
+        <div class="group-row last" id="open-total-popup">
+          <div class="row-title">All-time total</div>
+          <div class="row-detail">Tap to reveal</div>
+          <span class="row-chevron"><svg viewBox="0 0 24 24" fill="none"><path d="M9 5l7 7-7 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        </div>
       </div>
     </div>
   </section>
 
   <!-- CHECK-IN (Work day / Rest day) -->
-  <section class="screen hidden" data-screen="checkin" id="checkin-screen">
-    <button class="back-btn" data-back>‹ Home</button>
-    <div class="screen-content checkin-content">
-      <h2 id="checkin-title">Today</h2>
-      <ul class="checkin-list" id="checkin-list">
-        <!-- items injected by checkin.js -->
-      </ul>
+  <section class="screen surface-parchment hidden" data-screen="checkin" id="checkin-screen">
+    <button class="nav-back" data-back>
+      <svg viewBox="0 0 24 24" fill="none"><path d="M15 5l-7 7 7 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>Home</span>
+    </button>
+    <div class="screen-content day-content">
+      <div class="day-header">
+        <div>
+          <h1 class="screen-title t-display-md" id="checkin-title">Today</h1>
+          <div class="t-caption muted" id="checkin-date"></div>
+        </div>
+        <img class="monkey monkey-day" id="checkin-mascot" src="./icons/monkey/work.png" alt="" />
+      </div>
 
-      <h3 class="checkin-subheading">Bonus</h3>
-      <ul class="bonus-list" id="atier-list">
-        <!-- items injected by atier.js -->
-      </ul>
+      <div class="group-header">
+        <span class="label-caps">S-tier</span>
+        <span class="t-caption muted">Today's three</span>
+      </div>
+      <div class="group-card" id="checkin-list"></div>
 
-      <h3 class="checkin-subheading">Morning</h3>
-      <ul class="bonus-list" id="morning-list">
-        <!-- items injected by routines.js -->
-      </ul>
+      <div class="group-header">
+        <span class="label-caps">A-tier · bonus</span>
+        <span class="t-caption muted">If there's room</span>
+      </div>
+      <div class="group-card dim" id="atier-list"></div>
 
-      <h3 class="checkin-subheading">Night</h3>
-      <ul class="bonus-list" id="night-list">
-        <!-- items injected by routines.js -->
-      </ul>
+      <div class="routines-row">
+        <div class="routine-col">
+          <span class="label-caps">Morning</span>
+          <div id="morning-list"></div>
+        </div>
+        <div class="routine-divider"></div>
+        <div class="routine-col">
+          <span class="label-caps">Night</span>
+          <div id="night-list"></div>
+        </div>
+      </div>
     </div>
   </section>
 
   <!-- CALENDAR -->
-  <section class="screen hidden" data-screen="calendar">
-    <button class="back-btn" data-back>‹ Home</button>
-    <div class="screen-content calendar-content">
-      <div class="calendar-header">
-        <button class="link-btn" id="calendar-prev" aria-label="Previous month">‹</button>
-        <h2 id="calendar-month-label">Month Year</h2>
-        <button class="link-btn" id="calendar-next" aria-label="Next month">›</button>
-      </div>
+  <section class="screen surface-canvas hidden" data-screen="calendar">
+    <div class="cal-nav">
+      <button class="icon-btn" id="calendar-prev" aria-label="Previous month">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M15 5l-7 7 7 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="t-display-md" id="calendar-month-label" style="font-size:22px;">Month Year</div>
+      <button class="icon-btn" id="calendar-next" aria-label="Next month">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M9 5l7 7-7 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+    <div class="screen-content calendar-content" style="padding-top:0;">
       <div class="calendar-grid" id="calendar-grid">
         <!-- injected by calendar.js -->
       </div>
-      <div class="calendar-legend">
-        <span><span class="calendar-dot calendar-dot-work"></span> Work day</span>
-        <span><span class="calendar-dot calendar-dot-rest"></span> Rest day</span>
-        <span><span class="calendar-check">✓</span> Tracked items done</span>
+      <div class="cal-legend">
+        <div class="divider" style="margin: 0 0 18px;"></div>
+        <div class="cal-legend-row">
+          <span class="legend-item"><span class="legend-dot legend-dot-work"></span> Work</span>
+          <span class="legend-item"><span class="legend-dot legend-dot-rest"></span> Rest</span>
+        </div>
+        <div class="cal-legend-note">
+          <span class="t-caption muted">Filled means done. An outline is simply a day still ahead, or one that passed quietly.</span>
+          <img class="monkey monkey-progress" src="./icons/monkey/progress.png" alt="" />
+        </div>
       </div>
     </div>
   </section>
 
   <!-- SETTINGS -->
-  <section class="screen hidden" data-screen="settings">
-    <button class="back-btn" data-back>‹ Home</button>
+  <section class="screen surface-parchment hidden" data-screen="settings">
+    <button class="nav-back" data-back>
+      <svg viewBox="0 0 24 24" fill="none"><path d="M15 5l-7 7 7 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>Home</span>
+    </button>
     <div class="screen-content settings-content">
-      <h2>Settings</h2>
-      <div class="settings-row">
-        <label for="weekly-target-input">Weekly target (hours)</label>
-        <input type="number" id="weekly-target-input" min="1" max="100" />
+      <h1 class="screen-title t-display-md">Settings</h1>
+
+      <div class="group-header" style="margin-top:0;"><span class="label-caps">Goals</span></div>
+      <div class="group-card">
+        <div class="group-row settings-row">
+          <label class="row-title" for="weekly-target-input">Weekly target</label>
+          <div class="row-value"><input type="number" id="weekly-target-input" min="1" max="100" /> h</div>
+        </div>
+        <div class="group-row settings-row">
+          <label class="row-title" for="total-target-input">Total goal</label>
+          <div class="row-value"><input type="number" id="total-target-input" min="1" max="2000" /> h</div>
+        </div>
+        <div class="group-row settings-row last">
+          <div class="row-title">Banked so far</div>
+          <div class="row-value" id="banked-total">0h</div>
+        </div>
       </div>
-      <div class="settings-row">
-        <label for="total-target-input">Total goal (hours)</label>
-        <input type="number" id="total-target-input" min="1" max="2000" />
-      </div>
-      <div class="settings-row settings-buttons">
-        <button class="secondary-btn" id="export-btn">Export data</button>
-        <label class="secondary-btn file-label">
-          Import data
+
+      <div class="group-header"><span class="label-caps">Data</span></div>
+      <div class="group-card">
+        <div class="group-row settings-row" id="export-btn">
+          <span class="row-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M12 15V3.6M8 7.5l4-4 4 4" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/><path d="M5.5 13.5V19a1.5 1.5 0 001.5 1.5h10a1.5 1.5 0 001.5-1.5v-5.5" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg></span>
+          <div class="row-title">Export data</div>
+          <span class="row-chevron"><svg viewBox="0 0 24 24" fill="none"><path d="M9 5l7 7-7 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        </div>
+        <label class="group-row settings-row last file-label" for="import-input">
+          <span class="row-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3.6V15M8 11l4 4 4-4" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/><path d="M5.5 13.5V19a1.5 1.5 0 001.5 1.5h10a1.5 1.5 0 001.5-1.5v-5.5" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg></span>
+          <div class="row-title">Import data</div>
+          <span class="row-chevron"><svg viewBox="0 0 24 24" fill="none"><path d="M9 5l7 7-7 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
           <input type="file" id="import-input" accept="application/json" class="hidden" />
         </label>
+      </div>
+      <div class="t-caption muted settings-note">A single file, kept on your device. Yours to back up or move.</div>
+
+      <div class="settings-footer">
+        <img class="monkey monkey-hydrate" src="./icons/monkey/hydrate.png" alt="" />
+        <div class="t-tagline">Shinpo</div>
+        <div class="t-caption muted">Quiet progress, every day.</div>
+        <div class="t-fine muted">Version 1.0</div>
       </div>
     </div>
   </section>
@@ -131,22 +239,30 @@
   <!-- Total progress popup -->
   <div class="overlay hidden" id="total-popup">
     <div class="popup">
-      <h2>Total progress</h2>
-      <div class="total-progress-text" id="total-progress-text">0h of 190h</div>
+      <h2 class="t-display-md" style="margin:0;">Total progress</h2>
+      <div class="t-display-md num" id="total-progress-text">0h of 190h</div>
       <div class="progress-bar"><div class="progress-bar-fill" id="total-progress-fill"></div></div>
-      <button class="primary-btn" id="close-total-popup">Close</button>
+      <button class="primary-pill" id="close-total-popup">Close</button>
     </div>
   </div>
 
   <!-- Full-screen pomodoro focus -->
-  <div class="overlay fullscreen theme-neutral hidden" id="focus-screen">
+  <div class="overlay fullscreen surface-dark hidden" id="focus-screen">
     <div class="focus-content">
-      <div class="focus-time" id="focus-time">25:00</div>
-      <div class="focus-label" id="focus-label">Focus</div>
-      <textarea class="notes" id="focus-notes" placeholder="Notes for this session..."></textarea>
-      <div class="focus-buttons">
-        <button class="secondary-btn" id="focus-pause">Pause</button>
-        <button class="danger-btn" id="focus-cancel">Cancel</button>
+      <div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; width:100%;">
+        <img class="monkey monkey-focus" src="./icons/monkey/focus.png" alt="" />
+        <div class="label-caps" id="focus-label" style="letter-spacing:0.18em;">Focus</div>
+        <div class="focus-time num" id="focus-time">25:00</div>
+        <div class="progress-bar thin">
+          <div class="progress-bar-fill" id="focus-progress-fill"></div>
+        </div>
+        <textarea class="notes" id="focus-notes" placeholder="Notes for this session..."></textarea>
+      </div>
+      <div class="focus-controls">
+        <button class="pause-btn" id="focus-pause" aria-label="Pause">
+          <svg viewBox="0 0 24 24" fill="none"><rect x="7" y="5" width="3.4" height="14" rx="1.4" fill="currentColor"/><rect x="13.6" y="5" width="3.4" height="14" rx="1.4" fill="currentColor"/></svg>
+        </button>
+        <button class="cancel-link" id="focus-cancel">Cancel</button>
       </div>
     </div>
   </div>
@@ -154,13 +270,14 @@
   <!-- Full-screen "doing it now" -->
   <div class="overlay fullscreen hidden" id="doing-screen">
     <div class="focus-content">
-      <div class="doing-label" id="doing-label">Item</div>
-      <button class="primary-btn" id="doing-finished">Finished</button>
-      <button class="secondary-btn" id="doing-back">Back</button>
+      <div class="doing-label t-display-md" id="doing-label">Item</div>
+      <button class="primary-pill" id="doing-finished">Finished</button>
+      <button class="ghost-pill" id="doing-back" style="margin-top:12px;">Back</button>
     </div>
   </div>
 
   <script src="./storage.js"></script>
+  <script src="./icons.js"></script>
   <script src="./study.js"></script>
   <script src="./checkin.js"></script>
   <script src="./atier.js"></script>

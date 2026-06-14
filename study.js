@@ -40,6 +40,11 @@ const Study = (() => {
     return `${h}h ${m}m`;
   }
 
+  function formatHShort(minutes) {
+    const hours = minutes / 60;
+    return (Number.isInteger(hours) ? hours : Math.round(hours * 10) / 10) + 'h';
+  }
+
   function formatClock(seconds) {
     const m = Math.floor(seconds / 60);
     const s = seconds % 60;
@@ -52,9 +57,17 @@ const Study = (() => {
     checkWeeklyReset();
 
     const weeklyTargetMin = data.settings.weeklyTargetMinutes;
-    document.getElementById('weekly-hours').textContent = formatHM(data.study.weekMinutes);
-    document.getElementById('weekly-target-label').textContent =
-      `of ${formatHM(weeklyTargetMin)} this week`;
+    const weekMinutes = data.study.weekMinutes;
+
+    document.getElementById('weekly-hours').textContent = formatHM(weekMinutes);
+    document.getElementById('weekly-target-label').textContent = `/ ${formatHShort(weeklyTargetMin)}`;
+
+    const pct = Math.min(100, (weekMinutes / weeklyTargetMin) * 100);
+    document.getElementById('weekly-progress-fill').style.width = `${pct}%`;
+
+    const remaining = weeklyTargetMin - weekMinutes;
+    document.getElementById('weekly-remaining').textContent =
+      remaining > 0 ? `${formatHM(remaining)} to your weekly target.` : 'Weekly target reached.';
 
     renderTotalPopup();
   }
@@ -69,6 +82,15 @@ const Study = (() => {
   }
 
   // --- duration selection ---
+
+  function updatePomodoroDesc() {
+    const el = document.getElementById('pomodoro-desc');
+    if (!selectedMinutes || selectedMinutes <= 0) {
+      el.textContent = 'Choose a length to start.';
+      return;
+    }
+    el.textContent = `${selectedMinutes} min · then a ${breakMinutesFor(selectedMinutes)} min break`;
+  }
 
   function setupDurationButtons() {
     const buttons = document.querySelectorAll('.duration-btn');
@@ -87,12 +109,16 @@ const Study = (() => {
           customInput.classList.add('hidden');
           selectedMinutes = parseInt(btn.dataset.minutes, 10);
         }
+        updatePomodoroDesc();
       });
     });
 
     customInput.addEventListener('input', () => {
       selectedMinutes = parseInt(customInput.value, 10) || 0;
+      updatePomodoroDesc();
     });
+
+    updatePomodoroDesc();
   }
 
   // --- total popup ---
@@ -180,6 +206,10 @@ const Study = (() => {
     document.getElementById('focus-label').textContent =
       timer.mode === 'focus' ? 'Focus' : 'Break';
     document.getElementById('focus-notes').classList.toggle('hidden', timer.mode !== 'focus');
+
+    const elapsed = timer.totalSeconds - timer.remainingSeconds;
+    const pct = Math.min(100, (elapsed / timer.totalSeconds) * 100);
+    document.getElementById('focus-progress-fill').style.width = `${pct}%`;
   }
 
   function handleTimerComplete() {
@@ -240,11 +270,15 @@ const Study = (() => {
   function togglePause() {
     if (!timer) return;
     timer.paused = !timer.paused;
-    document.getElementById('focus-pause').textContent = timer.paused ? 'Resume' : 'Pause';
+    const btn = document.getElementById('focus-pause');
+    btn.innerHTML = timer.paused ? Icons.play : Icons.pause;
+    btn.setAttribute('aria-label', timer.paused ? 'Resume' : 'Pause');
   }
 
   function showFocusScreen() {
-    document.getElementById('focus-pause').textContent = 'Pause';
+    const btn = document.getElementById('focus-pause');
+    btn.innerHTML = Icons.pause;
+    btn.setAttribute('aria-label', 'Pause');
     updateFocusDisplay();
     document.getElementById('focus-screen').classList.remove('hidden');
   }

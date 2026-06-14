@@ -20,8 +20,12 @@ A calm, silly, hand-drawn monkey. Charm, not leverage. Hard rules:
 - The monkey has NO opinion about misses — no sad/disappointed states, no streak
   he guards, no levelling up, no nagging.
 - He is just a friendly presence (e.g. relaxed on the home screen).
-- Real art comes later from Claude Design. For now use a simple placeholder
-  (a labelled slot or a plain shape) and do NOT block the build on art.
+- Real art shipped from Claude Design (icons/monkey/*.png), one pose per
+  context: `pro` on Home, `pomodoro` on the Study screen, `focus` in the
+  full-screen pomodoro, `work`/`reading` on the Work day / Rest day check-ins,
+  `progress` in the Calendar legend, `hydrate` in Settings. Same poses are
+  also used to derive the app/home-screen icons. Any new screen that wants a
+  monkey should reuse one of these poses rather than commissioning more.
 
 ## Platform & tech (non-negotiable)
 - Local-first PWA. Vanilla HTML/CSS/JS — no framework, no build step.
@@ -103,13 +107,20 @@ calendar. It does NOT gate the daily check-in.
   under "Morning" and "Night" headings. Feed no score.
 
 ## Themes
-- Warm/light theme (build first): used by Home, Settings, and the Rest day
-  check-in. Calm, study-ready.
-- Calm-dark theme: used by the Work day check-in — focused, NOT bleak or grim.
-- Neutral/minimal theme: the Study screen's own look, distinct from the above
-  so the pomodoro stays distraction-free.
-- Full visual identity / polish pass comes later from Claude Design — these
-  three are functional placeholders, not final art direction.
+Visual identity from Claude Design is in place (`styles.css`): SF Pro system
+font stack (no external fonts/CDNs), a single green accent (`--primary
+#1b9b2f`, with focus/on-dark variants), and three reusable surfaces driven by
+CSS custom properties:
+- `.surface-parchment` (warm/light, `#f5f5f7`): Home, Settings, Rest day check-in.
+- `.surface-dark` (calm-dark, `#1a1a1c`): Work day check-in and the full-screen
+  pomodoro focus — focused, NOT bleak or grim.
+- `.surface-canvas` (white): Study and Calendar — the Study screen's own
+  neutral look so the pomodoro stays distraction-free.
+Components (cards, rows, progress bars, pills, check items) are surface-
+agnostic — they read `--text` / `--card-bg` / `--track` / `--primary-c` etc.
+from whichever surface class wraps them, so the same markup/JS works on any
+surface. New screens should pick one of these three surfaces rather than
+introducing new colors.
 
 ## V1 SCOPE — build ONLY this, get it working before anything else
 1. Home / Study / Work day / Rest day / Settings as separate screens (see
@@ -128,8 +139,10 @@ Calendar (month grid, gentle look-back, day-type dot + S-tier checkmark per
 day); A-tier bonus checklist; morning/night routine checklists. Day-type
 theming (work-dark skin) was already part of V1.
 
-## Phase 3 — only when told
-Real monkey art + full visual identity from Claude Design.
+## Phase 3 — built
+Full visual identity + real monkey art from Claude Design (see Themes and
+The monkey mascot above). Behaviour, data model, and V1/Phase 2 feature set
+are unchanged — this was a visual re-skin only.
 
 ## Working style
 - Smallest working version first. Build interactively; show small, reviewable diffs.

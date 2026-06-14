@@ -81,33 +81,48 @@ const Checkin = (() => {
 
   // --- rendering ---
 
+  // glyph for the current state — done | progress | didnt | na | pending
+  function glyphFor(state, na) {
+    if (na) return { cls: 'state-glyph-na', icon: Icons.dash };
+    if (state === 'done') return { cls: 'state-glyph-done', icon: Icons.check };
+    if (state === 'in_progress') return { cls: 'state-glyph-progress', icon: '' };
+    if (state === 'missed') return { cls: 'state-glyph-didnt', icon: Icons.cross };
+    return { cls: 'state-glyph-pending', icon: '' };
+  }
+
   function render() {
     checkDailyReset();
 
     const list = document.getElementById('checkin-list');
     list.innerHTML = '';
 
-    ITEMS.forEach(({ key, label }) => {
+    ITEMS.forEach(({ key, label }, i) => {
       const state = data.checkin.items[key];
       const na = data.checkin.na[key];
+      const glyph = glyphFor(state, na);
 
-      const li = document.createElement('li');
-      li.className = 'checkin-item';
-      if (na) {
-        li.classList.add('state-na');
-      } else if (state === 'done') {
-        li.classList.add('state-done');
-      } else if (state === 'missed') {
-        li.classList.add('state-missed');
-      }
+      const row = document.createElement('div');
+      row.className = 'tier-row';
+      if (i === ITEMS.length - 1) row.classList.add('last');
+
+      const main = document.createElement('div');
+      main.className = 'tier-main';
+
+      const glyphEl = document.createElement('div');
+      glyphEl.className = `state-glyph ${glyph.cls}`;
+      glyphEl.innerHTML = glyph.icon;
+      main.appendChild(glyphEl);
 
       const name = document.createElement('span');
-      name.className = 'checkin-item-name';
+      name.className = 'tier-label';
+      if (!na && state === 'missed') name.classList.add('is-didnt');
       name.textContent = label;
-      li.appendChild(name);
+      main.appendChild(name);
+
+      row.appendChild(main);
 
       const controls = document.createElement('div');
-      controls.className = 'checkin-controls';
+      controls.className = 'tier-controls';
 
       const stateButtons = [
         { value: 'done', text: 'Done' },
@@ -117,7 +132,7 @@ const Checkin = (() => {
 
       stateButtons.forEach(({ value, text }) => {
         const btn = document.createElement('button');
-        btn.className = 'state-btn';
+        btn.className = 'state-pill';
         btn.textContent = text;
         if (state === value && !na) btn.classList.add('active');
         btn.addEventListener('click', () => {
@@ -132,14 +147,14 @@ const Checkin = (() => {
       });
 
       const naBtn = document.createElement('button');
-      naBtn.className = 'state-btn';
+      naBtn.className = 'state-pill';
       naBtn.textContent = 'N/A today';
-      if (na) naBtn.classList.add('active');
+      if (na) naBtn.classList.add('na-active');
       naBtn.addEventListener('click', () => toggleNa(key));
       controls.appendChild(naBtn);
 
-      li.appendChild(controls);
-      list.appendChild(li);
+      row.appendChild(controls);
+      list.appendChild(row);
     });
   }
 

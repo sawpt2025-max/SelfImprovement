@@ -1,11 +1,12 @@
 // sw.js — minimal offline cache for the app shell
-const CACHE_NAME = 'shinpo-v4';
+const CACHE_NAME = 'shinpo-v5';
 const ASSETS = [
   './',
   './index.html',
   './styles.css',
   './app.js',
   './storage.js',
+  './icons.js',
   './study.js',
   './checkin.js',
   './atier.js',
@@ -17,6 +18,13 @@ const ASSETS = [
   './icons/icon-192.png',
   './icons/icon-512.png',
   './icons/apple-touch-icon.png',
+  './icons/monkey/pro.png',
+  './icons/monkey/pomodoro.png',
+  './icons/monkey/focus.png',
+  './icons/monkey/work.png',
+  './icons/monkey/reading.png',
+  './icons/monkey/progress.png',
+  './icons/monkey/hydrate.png',
 ];
 
 self.addEventListener('install', (event) => {

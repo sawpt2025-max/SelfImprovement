@@ -28,9 +28,20 @@ const Nav = (() => {
     data.dayType.type = dayType;
 
     const isWork = dayType === 'work';
-    document.getElementById('checkin-screen').classList.toggle('theme-dark', isWork);
-    document.getElementById('doing-screen').classList.toggle('theme-dark', isWork);
+    const checkinScreen = document.getElementById('checkin-screen');
+    const doingScreen = document.getElementById('doing-screen');
+    checkinScreen.classList.toggle('surface-dark', isWork);
+    checkinScreen.classList.toggle('surface-parchment', !isWork);
+    doingScreen.classList.toggle('surface-dark', isWork);
+    doingScreen.classList.toggle('surface-parchment', !isWork);
+
     document.getElementById('checkin-title').textContent = isWork ? 'Work day' : 'Rest day';
+    document.getElementById('checkin-mascot').src = isWork
+      ? './icons/monkey/work.png'
+      : './icons/monkey/reading.png';
+    document.getElementById('checkin-date').textContent = new Date().toLocaleDateString(undefined, {
+      weekday: 'long', month: 'long', day: 'numeric',
+    });
 
     Checkin.render();
     ATier.render();
