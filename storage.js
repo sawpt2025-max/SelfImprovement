@@ -60,8 +60,8 @@ const DEFAULT_DATA = {
   },
   history: {}, // { 'YYYY-MM-DD': { dayType, sTierDone } } — feeds the calendar
   schedule: {
-    date: null, // ISO date the current plan + inputs apply to
     inputs: {
+      wakeTime: '08:30',
       restDay: false,
       workStart: '09:00',
       workEnd: '17:00',
@@ -69,7 +69,9 @@ const DEFAULT_DATA = {
       groceries: false,
       cooking: false,
     },
-    plan: [], // [{ start: 'HH:MM', end: 'HH:MM', label, category }], generated — read-only
+    // [{ start: 'HH:MM', end: 'HH:MM', label, category }] — empty until Generate is
+    // pressed, then frozen until Reset. Never auto-regenerated.
+    plan: [],
     note: '', // optional "no room for X today" message
   },
 };

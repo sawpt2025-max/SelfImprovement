@@ -32,6 +32,10 @@
   --tan: #e9d2ac;
   --tan-deep: #caa978;
 
+  /* Calendar markers — today is always red, whatever its day-type */
+  --cal-today: #d9483c;
+  --cal-rest: #3f7fd1;
+
   /* Schedule timeline — muted iOS-Calendar-style category tints */
   --sch-study-peak-bg: #dcf2e3; --sch-study-peak-fg: #1f7a3d;
   --sch-study-light-bg: #f2efd8; --sch-study-light-fg: #8a7a23;
@@ -201,6 +205,12 @@ body {
 .action-tile-dark .tile-name { color: #fff; }
 .action-tile-dark .tile-desc { color: var(--on-dark-60); }
 .action-tile-dark .tile-chevron { color: var(--on-dark-30); }
+
+.action-tile-accent {
+  background: #eaf6ec; border-color: rgba(27,155,47,0.16);
+}
+.action-tile-accent .tile-name { color: var(--primary); }
+.action-tile-accent .tile-chevron { color: rgba(27,155,47,0.35); }
 
 .tile-body { flex: 1; }
 .tile-name { font-family: var(--font); font-size: 26px; font-weight: 600; line-height: 1.1; color: var(--text); }
@@ -417,18 +427,17 @@ body {
   font-size: 17px; font-variant-numeric: tabular-nums; letter-spacing: -0.374px;
 }
 .cal-plain { color: var(--text-muted-30); }
-.cal-circle-today { border: 2px solid var(--primary); color: var(--primary); font-weight: 600; }
-.cal-circle-work-done { background: var(--ink); color: #fff; }
-.cal-circle-work { border: 1.5px solid rgba(29,29,31,0.38); color: var(--ink); }
-.cal-circle-rest-done { background: var(--tan); color: var(--ink); }
-.cal-circle-rest { border: 1.5px solid var(--tan-deep); color: var(--ink-muted-80); }
+.cal-circle-today { background: var(--cal-today); color: #fff; font-weight: 600; }
+.cal-circle-work { background: var(--ink); color: #fff; font-weight: 600; }
+.cal-circle-rest { background: var(--cal-rest); color: #fff; font-weight: 600; }
 
 .cal-legend { padding: 22px 12px 0; }
 .cal-legend-row { display: flex; gap: 18px; flex-wrap: wrap; margin-bottom: 14px; }
 .legend-item { display: flex; align-items: center; gap: 7px; }
 .legend-dot { width: 13px; height: 13px; border-radius: var(--r-pill); }
+.legend-dot-today { background: var(--cal-today); }
 .legend-dot-work { background: var(--ink); }
-.legend-dot-rest { background: var(--tan); }
+.legend-dot-rest { background: var(--cal-rest); }
 .cal-legend-note { display: flex; align-items: center; gap: 16px; }
 .cal-legend-note .t-caption { flex: 1; }
 

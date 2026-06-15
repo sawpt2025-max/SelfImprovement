@@ -35,7 +35,7 @@
         <div class="t-caption muted">A quiet day to make progress.</div>
       </div>
       <div class="action-tiles">
-        <button class="action-tile" id="nav-schedule">
+        <button class="action-tile action-tile-accent" id="nav-schedule">
           <div class="tile-body">
             <div class="tile-name">Schedule</div>
             <div class="tile-desc">Today's plan, at a glance</div>
@@ -186,11 +186,12 @@
       <div class="cal-legend">
         <div class="divider" style="margin: 0 0 18px;"></div>
         <div class="cal-legend-row">
+          <span class="legend-item"><span class="legend-dot legend-dot-today"></span> Today</span>
           <span class="legend-item"><span class="legend-dot legend-dot-work"></span> Work</span>
           <span class="legend-item"><span class="legend-dot legend-dot-rest"></span> Rest</span>
         </div>
         <div class="cal-legend-note">
-          <span class="t-caption muted">Filled means done. An outline is simply a day still ahead, or one that passed quietly.</span>
+          <span class="t-caption muted">A gentle look-back — today is always highlighted, other days show their type once recorded.</span>
           <img class="monkey monkey-progress" src="./icons/monkey/progress.png" alt="" />
         </div>
       </div>
@@ -264,28 +265,41 @@
     <div class="screen-content schedule-content">
       <h1 class="screen-title t-display-md">Schedule</h1>
 
-      <div class="group-header" style="margin-top:0;"><span class="label-caps">Today</span></div>
-      <div class="group-card" id="schedule-toggles"></div>
-
-      <div class="group-card" id="sch-work-card" style="margin-top:12px;">
-        <div class="group-row settings-row last">
-          <div class="row-title">Work hours</div>
-          <div class="row-value sch-time-row">
-            <input type="time" id="sch-work-start" class="sch-time-input" />
-            <span class="muted">–</span>
-            <input type="time" id="sch-work-end" class="sch-time-input" />
+      <div id="schedule-form">
+        <div class="group-header" style="margin-top:0;"><span class="label-caps">Today</span></div>
+        <div class="group-card">
+          <div class="group-row settings-row last">
+            <label class="row-title" for="sch-wake-time">Wake time</label>
+            <div class="row-value"><input type="time" id="sch-wake-time" class="sch-time-input" /></div>
           </div>
         </div>
+
+        <div class="group-card" id="schedule-toggles" style="margin-top:12px;"></div>
+
+        <div class="group-card" id="sch-work-card" style="margin-top:12px;">
+          <div class="group-row settings-row last">
+            <div class="row-title">Work hours</div>
+            <div class="row-value sch-time-row">
+              <input type="time" id="sch-work-start" class="sch-time-input" />
+              <span class="muted">–</span>
+              <input type="time" id="sch-work-end" class="sch-time-input" />
+            </div>
+          </div>
+        </div>
+
+        <button class="primary-pill full" id="sch-generate" style="margin-top:16px;">Generate</button>
       </div>
 
-      <button class="primary-pill full" id="sch-generate" style="margin-top:16px;">Generate</button>
+      <div id="schedule-plan-view" class="hidden">
+        <div class="t-caption muted schedule-note hidden" id="schedule-note"></div>
 
-      <div class="t-caption muted schedule-note hidden" id="schedule-note"></div>
+        <div class="group-header" style="margin-top:0;"><span class="label-caps">Plan</span></div>
+        <div class="timeline">
+          <div class="timeline-hours" id="schedule-hours"></div>
+          <div class="timeline-blocks" id="schedule-blocks"></div>
+        </div>
 
-      <div class="group-header"><span class="label-caps">Plan</span></div>
-      <div class="timeline">
-        <div class="timeline-hours" id="schedule-hours"></div>
-        <div class="timeline-blocks" id="schedule-blocks"></div>
+        <button class="ghost-pill full" id="sch-reset" style="margin-top:20px;">Reset / new day</button>
       </div>
     </div>
   </section>

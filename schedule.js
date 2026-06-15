@@ -1,13 +1,11 @@
 // schedule.js — rule-based daily schedule planner.
 // Pure suggestion: never reads/writes study, check-in, or history data.
+// The generated plan is frozen in localStorage until the user hits Reset —
+// it never auto-regenerates on reload or day rollover.
 
 const Schedule = (() => {
   let data;
   let persist;
-
-  function todayIso() {
-    return new Date().toISOString().slice(0, 10);
-  }
 
   // --- time helpers (minutes since 00:00) ---
 
@@ -37,6 +35,7 @@ const Schedule = (() => {
   const DAY_END = 23 * 60; // 23:00 — last possible end for any non-fixed activity
   const PEAK_START = 10 * 60;
   const PEAK_END = 16 * 60;
+  const GET_READY_MIN = 60;
   const TRAVEL_HOME_LIB = 30; // home <-> Library A or Library B
   const GYM_MIN = 90;
   const GROCERIES_MIN = 90;
@@ -130,25 +129,44 @@ const Schedule = (() => {
 
   // --- generation ---
 
-  function generatePlan(inputs, wakeTime) {
-    const wakeMin = toMinutes(wakeTime);
+  function generatePlan(inputs) {
+    const wakeMin = toMinutes(inputs.wakeTime);
     const blocks = [];
     const busy = [];
     const notes = [];
 
+    // activities start at wake + 1h, regardless of how "Get Ready!" is clipped below
+    const dayStart = wakeMin + GET_READY_MIN;
+
     let isLate = false;
     let commuteStart = null;
     let commuteEnd = null;
+    let overnight = false;
 
     if (!inputs.restDay) {
       const workStartMin = toMinutes(inputs.workStart);
       const workEndMin = toMinutes(inputs.workEnd);
+      // an end time at/before the start time means the shift runs past midnight
+      overnight = workEndMin <= workStartMin;
       commuteStart = workStartMin - 60;
-      commuteEnd = workEndMin + 60;
-      isLate = workEndMin >= toMinutes('19:00');
-      blocks.push({ start: commuteStart, end: workStartMin, label: 'Commute', category: 'work' });
-      blocks.push({ start: workStartMin, end: workEndMin, label: 'Work', category: 'work' });
-      blocks.push({ start: workEndMin, end: commuteEnd, label: 'Commute', category: 'work' });
+      isLate = overnight || workEndMin >= toMinutes('19:00');
+      commuteEnd = overnight ? 24 * 60 : workEndMin + 60;
+    }
+
+    // fixed: 1h "Get Ready!" right after waking — clipped if the morning
+    // commute starts during it (e.g. waking exactly 1h before work)
+    const getReadyEnd = commuteStart !== null ? Math.min(dayStart, Math.max(wakeMin, commuteStart)) : dayStart;
+    if (getReadyEnd > wakeMin) {
+      blocks.push({ start: wakeMin, end: getReadyEnd, label: 'Get Ready!', category: 'travel' });
+      busy.push({ start: wakeMin, end: getReadyEnd });
+    }
+
+    if (!inputs.restDay) {
+      const workStartMin = toMinutes(inputs.workStart);
+      const workEndMin = toMinutes(inputs.workEnd);
+      blocks.push({ start: commuteStart, end: workStartMin, label: 'Commute', category: 'travel' });
+      blocks.push({ start: workStartMin, end: overnight ? commuteEnd : workEndMin, label: 'Work', category: 'work' });
+      if (!overnight) blocks.push({ start: workEndMin, end: commuteEnd, label: 'Commute', category: 'travel' });
       busy.push({ start: commuteStart, end: commuteEnd });
     }
 
@@ -163,9 +181,9 @@ const Schedule = (() => {
       const span = TRAVEL_HOME_LIB + GROCERIES_MIN + TRAVEL_HOME_LIB;
       let start = null;
       if (inputs.restDay) {
-        start = findFreeSpan(busy, wakeMin, DAY_END, span);
+        start = findFreeSpan(busy, dayStart, DAY_END, span);
       } else if (isLate) {
-        start = findFreeSpan(busy, wakeMin, commuteStart, span);
+        start = findFreeSpan(busy, dayStart, commuteStart, span);
       } else {
         start = findFreeSpan(busy, commuteEnd, DAY_END, span);
       }
@@ -187,12 +205,12 @@ const Schedule = (() => {
     if (inputs.cooking) {
       let cookStart = null;
       if (!inputs.restDay && isLate) {
-        const earliest = groceriesHomeArrival !== null ? groceriesHomeArrival : wakeMin;
+        const earliest = groceriesHomeArrival !== null ? groceriesHomeArrival : dayStart;
         if (earliest + COOK_MIN <= commuteStart) cookStart = earliest;
       } else {
         const earliest = Math.max(
           toMinutes('19:00'),
-          inputs.restDay ? wakeMin : commuteEnd,
+          inputs.restDay ? dayStart : commuteEnd,
           groceriesHomeArrival || 0
         );
         if (earliest + COOK_MIN <= DAY_END) cookStart = earliest;
@@ -229,7 +247,7 @@ const Schedule = (() => {
 
       // (b) morning, before noon
       if (!placed) {
-        start = findFreeSpan(busy, wakeMin, 12 * 60, span);
+        start = findFreeSpan(busy, dayStart, 12 * 60, span);
         if (start !== null) {
           addGymWithTravel(start);
           placed = true;
@@ -239,7 +257,7 @@ const Schedule = (() => {
       // (c) right before work — folded into the existing commute, no extra travel
       if (!placed && !inputs.restDay) {
         const s = commuteStart - GYM_MIN;
-        if (s >= wakeMin && freeWindows(busy, s, commuteStart).some((w) => w.start <= s && w.end >= commuteStart)) {
+        if (s >= dayStart && freeWindows(busy, s, commuteStart).some((w) => w.start <= s && w.end >= commuteStart)) {
           blocks.push({ start: s, end: commuteStart, label: 'Gym · Library B', category: 'gym' });
           busy.push({ start: s, end: commuteStart });
           placed = true;
@@ -251,7 +269,7 @@ const Schedule = (() => {
 
     // --- study fills remaining free time, peak hours first ---
     let studyMinutes = 0;
-    let windows = freeWindows(busy, wakeMin, DAY_END);
+    let windows = freeWindows(busy, dayStart, DAY_END);
     if (isLate) {
       windows = windows
         .filter((w) => w.start < commuteEnd)
@@ -317,26 +335,30 @@ const Schedule = (() => {
     };
   }
 
-  // --- daily reset / regeneration ---
-
-  function checkDailyReset() {
-    const today = todayIso();
-    if (data.schedule.date !== today) {
-      data.schedule.date = today;
-      const { plan, note } = generatePlan(data.schedule.inputs, data.settings.wakeTime);
-      data.schedule.plan = plan;
-      data.schedule.note = note;
-      persist();
-    }
-  }
+  // --- generate / reset ---
 
   function regenerate() {
-    const { plan, note } = generatePlan(data.schedule.inputs, data.settings.wakeTime);
+    const { plan, note } = generatePlan(data.schedule.inputs);
     data.schedule.plan = plan;
     data.schedule.note = note;
-    data.schedule.date = todayIso();
     persist();
-    renderTimeline();
+    render();
+  }
+
+  function resetSchedule() {
+    data.schedule.inputs = {
+      wakeTime: data.settings.wakeTime,
+      restDay: false,
+      workStart: '09:00',
+      workEnd: '17:00',
+      gym: false,
+      groceries: false,
+      cooking: false,
+    };
+    data.schedule.plan = [];
+    data.schedule.note = '';
+    persist();
+    render();
   }
 
   // --- form ---
@@ -392,6 +414,7 @@ const Schedule = (() => {
   }
 
   function renderForm() {
+    document.getElementById('sch-wake-time').value = data.schedule.inputs.wakeTime;
     document.getElementById('sch-work-start').value = data.schedule.inputs.workStart;
     document.getElementById('sch-work-end').value = data.schedule.inputs.workEnd;
     renderToggles();
@@ -399,6 +422,11 @@ const Schedule = (() => {
   }
 
   function setupForm() {
+    document.getElementById('sch-wake-time').addEventListener('change', (e) => {
+      if (!e.target.value) return;
+      data.schedule.inputs.wakeTime = e.target.value;
+      persist();
+    });
     document.getElementById('sch-work-start').addEventListener('change', (e) => {
       data.schedule.inputs.workStart = e.target.value;
       persist();
@@ -408,6 +436,7 @@ const Schedule = (() => {
       persist();
     });
     document.getElementById('sch-generate').addEventListener('click', regenerate);
+    document.getElementById('sch-reset').addEventListener('click', resetSchedule);
   }
 
   // --- timeline rendering ---
@@ -426,7 +455,7 @@ const Schedule = (() => {
       noteEl.classList.add('hidden');
     }
 
-    const wakeMin = toMinutes(data.settings.wakeTime);
+    const wakeMin = toMinutes(data.schedule.inputs.wakeTime);
     const timelineStart = Math.floor(wakeMin / 60) * 60;
     const timelineEnd = 24 * 60;
     const PX_PER_MIN = 1;
@@ -457,15 +486,16 @@ const Schedule = (() => {
   }
 
   function render() {
-    checkDailyReset();
+    const hasPlan = data.schedule.plan.length > 0;
+    document.getElementById('schedule-form').classList.toggle('hidden', hasPlan);
+    document.getElementById('schedule-plan-view').classList.toggle('hidden', !hasPlan);
     renderForm();
-    renderTimeline();
+    if (hasPlan) renderTimeline();
   }
 
   function init(sharedData, persistFn) {
     data = sharedData;
     persist = persistFn;
-    checkDailyReset();
     setupForm();
     render();
   }

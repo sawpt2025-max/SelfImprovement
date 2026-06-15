@@ -10,7 +10,10 @@ const Calendar = (() => {
   ];
 
   function isoDate(d) {
-    return d.toISOString().slice(0, 10);
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${y}-${m}-${day}`;
   }
 
   function todayIso() {
@@ -54,12 +57,12 @@ const Calendar = (() => {
       const circle = document.createElement('div');
       circle.className = 'cal-circle';
 
-      if (entry && entry.dayType === 'work') {
-        circle.classList.add(entry.sTierDone ? 'cal-circle-work-done' : 'cal-circle-work');
-      } else if (entry && entry.dayType === 'rest') {
-        circle.classList.add(entry.sTierDone ? 'cal-circle-rest-done' : 'cal-circle-rest');
-      } else if (iso === today) {
+      if (iso === today) {
         circle.classList.add('cal-circle-today');
+      } else if (entry && entry.dayType === 'work') {
+        circle.classList.add('cal-circle-work');
+      } else if (entry && entry.dayType === 'rest') {
+        circle.classList.add('cal-circle-rest');
       } else {
         circle.classList.add('cal-plain');
       }

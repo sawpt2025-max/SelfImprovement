@@ -37,7 +37,6 @@ const Settings = (() => {
       if (!e.target.value) return;
       data.settings.wakeTime = e.target.value;
       persist();
-      Schedule.render();
     });
   }
 

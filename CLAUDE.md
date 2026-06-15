@@ -55,11 +55,11 @@ pomodoro, which must be distraction-free.
   Same check-in, themed differently. Back to Home.
 - **Settings**: weekly target, total goal, and JSON export/import live here —
   not on the main screens.
-- **Calendar**: iPhone-style month grid, reachable from Home. Each day cell
-  shows only (a) a subtle dot for that day's day-type (work/rest) and (b) a
-  small checkmark if that day's S-tier items were all done/N-A. Prev/next
-  month navigation. A gentle look-back, not a streak — no "broken streak"
-  states, no red. Back to Home.
+- **Calendar**: iPhone-style month grid, reachable from Home. Each day cell is
+  a circle coloured by what it is: TODAY is always red, regardless of its
+  day-type; any other recorded day is blue (rest) or black (work); a day with
+  no record stays neutral/plain. Prev/next month navigation. A gentle
+  look-back, not a streak — no "broken streak" states. Back to Home.
 
 ## Day type
 Tapping Work day or Rest day on Home records that as today's day-type and
@@ -145,23 +145,33 @@ The monkey mascot above). Behaviour, data model, and V1/Phase 2 feature set
 are unchanged — this was a visual re-skin only.
 
 ## Phase 4 — built: Schedule (rule-based daily planner)
-A "Schedule" tile sits at the top of Home, above Study / Work day / Rest day.
-It opens a screen (`.surface-canvas`, like Study/Calendar) with a small daily
-form, a "Generate" button, and an iOS-Calendar-style vertical timeline below.
+A "Schedule" tile sits at the top of Home, above Study / Work day / Rest day,
+in its own muted accent colour (distinct from the other three tiles). It opens
+a screen (`.surface-canvas`, like Study/Calendar) with a small daily form, a
+"Generate" button, and an iOS-Calendar-style vertical timeline below.
 
 - **Pure suggestion**: never reads or writes `study`, `checkin`, `aTier`,
-  `routines`, or `history`. Lives entirely in its own `data.schedule` slice
-  plus `data.settings.wakeTime` (default 08:30, editable in Settings).
-- **Daily inputs** (`data.schedule.inputs`, persisted): "Rest day / no work"
-  toggle, work start/end times (hidden when Rest day), and Gym / Groceries /
-  Cooking toggles for today. Tapping Generate runs `schedule.js`'s
+  `routines`, or `history`. Lives entirely in its own `data.schedule` slice.
+- **Daily inputs** (`data.schedule.inputs`, persisted): wake time (default
+  08:30, editable here — `data.settings.wakeTime` only supplies the default
+  when the form is reset), "Rest day / no work" toggle, work start/end times
+  (hidden when Rest day), and Gym / Groceries / Cooking toggles for today.
+- **Frozen plan, no auto-regeneration**: tapping Generate runs `schedule.js`'s
   `generatePlan()` and stores the result in `data.schedule.plan` +
-  `data.schedule.note`. On a new day, the stored inputs are reused and the
-  plan auto-regenerates.
+  `data.schedule.note`, then switches the screen to a read-only timeline view.
+  The plan stays exactly as generated across reloads and day rollovers — it
+  is NEVER recomputed automatically. Only the "Reset / new day" button (shown
+  with the plan) clears `data.schedule.plan`/`note` and the inputs back to
+  defaults, returning to the input form.
+- **Get Ready**: a fixed 1-hour "Get Ready!" block is always placed right
+  after wake time; all other activities start at wake + 1h.
 - **Planner rules** (implemented in `schedule.js`):
   - Fixed: Work = the shift + 1h commute each side. A shift ending at/after
-    19:00 is a "late shift" — no evening study, groceries/cooking shift to
-    the morning.
+    19:00, OR an end time at/before its start time (an overnight shift that
+    crosses midnight), is a "late shift" — no evening study, groceries/cooking
+    shift to the morning. For an overnight shift, the free window for the day
+    runs from wake+1h to (shift start − 1h commute); nothing is scheduled
+    during or after the shift that night.
   - Travel: house↔Library A (Lidl) 30min, house↔Library B (gym) 30min,
     house↔work 1h, Library A↔B 45min (never scheduled directly — routed via
     home instead).
@@ -181,7 +191,9 @@ form, a "Generate" button, and an iOS-Calendar-style vertical timeline below.
 - Timeline runs from wake time to end of day, last activity ends by 23:00.
   Category tints (`--sch-*` vars in styles.css) are a deliberate, muted,
   iOS-Calendar-style exception to the single-accent rule — components
-  elsewhere still use `--primary-c`.
+  elsewhere still use `--primary-c`. Work has its own tint; Commute/Get
+  Ready/Travel share a separate muted tint, distinct from Work and from
+  study/gym/cook/groceries.
 
 ## Working style
 - Smallest working version first. Build interactively; show small, reviewable diffs.
