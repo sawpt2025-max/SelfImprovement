@@ -6,6 +6,7 @@ const DEFAULT_DATA = {
   settings: {
     weeklyTargetMinutes: 12 * 60,
     totalTargetMinutes: 190 * 60,
+    wakeTime: '08:30',
   },
   study: {
     weekStart: null, // ISO date (Monday) the current weekly counter started
@@ -58,6 +59,19 @@ const DEFAULT_DATA = {
     },
   },
   history: {}, // { 'YYYY-MM-DD': { dayType, sTierDone } } — feeds the calendar
+  schedule: {
+    date: null, // ISO date the current plan + inputs apply to
+    inputs: {
+      restDay: false,
+      workStart: '09:00',
+      workEnd: '17:00',
+      gym: false,
+      groceries: false,
+      cooking: false,
+    },
+    plan: [], // [{ start: 'HH:MM', end: 'HH:MM', label, category }], generated — read-only
+    note: '', // optional "no room for X today" message
+  },
 };
 
 function loadData() {

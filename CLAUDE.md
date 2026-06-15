@@ -144,6 +144,45 @@ Full visual identity + real monkey art from Claude Design (see Themes and
 The monkey mascot above). Behaviour, data model, and V1/Phase 2 feature set
 are unchanged — this was a visual re-skin only.
 
+## Phase 4 — built: Schedule (rule-based daily planner)
+A "Schedule" tile sits at the top of Home, above Study / Work day / Rest day.
+It opens a screen (`.surface-canvas`, like Study/Calendar) with a small daily
+form, a "Generate" button, and an iOS-Calendar-style vertical timeline below.
+
+- **Pure suggestion**: never reads or writes `study`, `checkin`, `aTier`,
+  `routines`, or `history`. Lives entirely in its own `data.schedule` slice
+  plus `data.settings.wakeTime` (default 08:30, editable in Settings).
+- **Daily inputs** (`data.schedule.inputs`, persisted): "Rest day / no work"
+  toggle, work start/end times (hidden when Rest day), and Gym / Groceries /
+  Cooking toggles for today. Tapping Generate runs `schedule.js`'s
+  `generatePlan()` and stores the result in `data.schedule.plan` +
+  `data.schedule.note`. On a new day, the stored inputs are reused and the
+  plan auto-regenerates.
+- **Planner rules** (implemented in `schedule.js`):
+  - Fixed: Work = the shift + 1h commute each side. A shift ending at/after
+    19:00 is a "late shift" — no evening study, groceries/cooking shift to
+    the morning.
+  - Travel: house↔Library A (Lidl) 30min, house↔Library B (gym) 30min,
+    house↔work 1h, Library A↔B 45min (never scheduled directly — routed via
+    home instead).
+  - Study fills all remaining free time, priority #1, split into "peak focus"
+    (10:00–16:00, strong green) and "lower focus" (other hours, light
+    green/yellow) blocks. Free windows ≥90min go to a library (Library B if
+    gym today, else Library A if groceries today, else Library A); shorter
+    windows stay home.
+  - Gym (~90min) tries midday 12:00–15:00, then morning, then right before
+    work (folded into the existing commute, no extra travel).
+  - Groceries (~90min) and Cooking (60min) follow the late/early-shift timing
+    rules in the planner; if something doesn't fit, it's dropped with a short
+    note (e.g. "No room for gym today") rather than silently overlapping.
+  - A post-pass collapses pointless "travel home then immediately back to the
+    same place" pairs (e.g. gym at Library B flowing straight into Library B
+    study) into one continuous block.
+- Timeline runs from wake time to end of day, last activity ends by 23:00.
+  Category tints (`--sch-*` vars in styles.css) are a deliberate, muted,
+  iOS-Calendar-style exception to the single-accent rule — components
+  elsewhere still use `--primary-c`.
+
 ## Working style
 - Smallest working version first. Build interactively; show small, reviewable diffs.
 - Keep the V1 look clean and restrained — the real visual identity and the monkey

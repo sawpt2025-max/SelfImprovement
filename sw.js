@@ -1,5 +1,5 @@
 // sw.js — minimal offline cache for the app shell
-const CACHE_NAME = 'shinpo-v6';
+const CACHE_NAME = 'shinpo-v7';
 const ASSETS = [
   './',
   './index.html',
@@ -12,6 +12,7 @@ const ASSETS = [
   './atier.js',
   './routines.js',
   './calendar.js',
+  './schedule.js',
   './settings.js',
   './nav.js',
   './manifest.webmanifest',

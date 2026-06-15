@@ -32,6 +32,15 @@
   --tan: #e9d2ac;
   --tan-deep: #caa978;
 
+  /* Schedule timeline — muted iOS-Calendar-style category tints */
+  --sch-study-peak-bg: #dcf2e3; --sch-study-peak-fg: #1f7a3d;
+  --sch-study-light-bg: #f2efd8; --sch-study-light-fg: #8a7a23;
+  --sch-work-bg: #e3e6f0; --sch-work-fg: #4d5577;
+  --sch-gym-bg: #fbe6dd; --sch-gym-fg: #b1532e;
+  --sch-cook-bg: #f0e3f2; --sch-cook-fg: #80498f;
+  --sch-groceries-bg: #e1eef5; --sch-groceries-fg: #2f6f93;
+  --sch-travel-bg: #ececee; --sch-travel-fg: #97979c;
+
   --r-sm: 8px;
   --r-md: 11px;
   --r-lg: 18px;
@@ -486,6 +495,38 @@ body {
 .doing-label { text-align: center; margin: 0 0 28px; }
 #doing-screen .focus-content { justify-content: center; gap: 12px; }
 #doing-screen .primary-pill, #doing-screen .ghost-pill { width: 100%; }
+
+/* ───────────────────────── Schedule ───────────────────────── */
+
+.sch-time-row { display: flex; align-items: center; gap: 6px; }
+.sch-time-input {
+  border: none; background: none; color: var(--text-muted); font-family: var(--font);
+  font-size: 17px; font-variant-numeric: tabular-nums; padding: 0;
+}
+
+.timeline { position: relative; margin-top: 4px; padding-bottom: 8px; }
+.timeline-hours { display: flex; flex-direction: column; }
+.timeline-hour {
+  display: flex; align-items: flex-start; border-top: 0.5px solid var(--sep);
+}
+.timeline-hour:first-child { border-top: none; }
+.timeline-hour-label {
+  width: 52px; flex-shrink: 0; font-size: 12px; color: var(--text-muted-30);
+  font-variant-numeric: tabular-nums; padding: 2px 8px 0 0; text-align: right;
+}
+.timeline-blocks { position: absolute; top: 0; left: 60px; right: 0; }
+.timeline-block {
+  position: absolute; left: 0; right: 4px; min-height: 16px;
+  border-radius: var(--r-sm); padding: 3px 8px; font-size: 12px; font-weight: 600;
+  line-height: 1.25; overflow: hidden;
+}
+.sch-block-study-peak    { background: var(--sch-study-peak-bg);    color: var(--sch-study-peak-fg); }
+.sch-block-study-light   { background: var(--sch-study-light-bg);   color: var(--sch-study-light-fg); }
+.sch-block-work          { background: var(--sch-work-bg);          color: var(--sch-work-fg); }
+.sch-block-gym           { background: var(--sch-gym-bg);           color: var(--sch-gym-fg); }
+.sch-block-cook          { background: var(--sch-cook-bg);          color: var(--sch-cook-fg); }
+.sch-block-groceries     { background: var(--sch-groceries-bg);     color: var(--sch-groceries-fg); }
+.sch-block-travel        { background: var(--sch-travel-bg);        color: var(--sch-travel-fg); }
 
 /* ───────────────────────── iPad / wider screens ───────────────────────── */
 

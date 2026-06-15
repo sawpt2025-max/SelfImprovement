@@ -14,6 +14,8 @@ const Settings = (() => {
     const hours = data.study.totalMinutes / 60;
     const rounded = Number.isInteger(hours) ? hours : Math.round(hours * 10) / 10;
     document.getElementById('banked-total').textContent = `${rounded}h`;
+
+    document.getElementById('wake-time-input').value = data.settings.wakeTime;
   }
 
   function setupTargets() {
@@ -29,6 +31,13 @@ const Settings = (() => {
       data.settings.totalTargetMinutes = hours * 60;
       persist();
       Study.render();
+    });
+
+    document.getElementById('wake-time-input').addEventListener('change', (e) => {
+      if (!e.target.value) return;
+      data.settings.wakeTime = e.target.value;
+      persist();
+      Schedule.render();
     });
   }
 

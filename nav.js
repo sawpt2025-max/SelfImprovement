@@ -61,10 +61,16 @@ const Nav = (() => {
     showScreen('calendar');
   }
 
+  function openSchedule() {
+    Schedule.render();
+    showScreen('schedule');
+  }
+
   function setup(sharedData, persistFn) {
     data = sharedData;
     persist = persistFn;
 
+    document.getElementById('nav-schedule').addEventListener('click', openSchedule);
     document.getElementById('nav-study').addEventListener('click', openStudy);
     document.getElementById('nav-work').addEventListener('click', () => openCheckin('work'));
     document.getElementById('nav-rest').addEventListener('click', () => openCheckin('rest'));

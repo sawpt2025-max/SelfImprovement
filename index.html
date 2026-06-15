@@ -35,6 +35,13 @@
         <div class="t-caption muted">A quiet day to make progress.</div>
       </div>
       <div class="action-tiles">
+        <button class="action-tile" id="nav-schedule">
+          <div class="tile-body">
+            <div class="tile-name">Schedule</div>
+            <div class="tile-desc">Today's plan, at a glance</div>
+          </div>
+          <span class="tile-chevron"><svg viewBox="0 0 24 24" fill="none"><path d="M9 5l7 7-7 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        </button>
         <button class="action-tile" id="nav-study">
           <div class="tile-body">
             <div class="tile-name">Study</div>
@@ -215,6 +222,14 @@
         </div>
       </div>
 
+      <div class="group-header"><span class="label-caps">Schedule</span></div>
+      <div class="group-card">
+        <div class="group-row settings-row last">
+          <label class="row-title" for="wake-time-input">Wake time</label>
+          <div class="row-value"><input type="time" id="wake-time-input" /></div>
+        </div>
+      </div>
+
       <div class="group-header"><span class="label-caps">Data</span></div>
       <div class="group-card">
         <div class="group-row settings-row" id="export-btn">
@@ -236,6 +251,41 @@
         <div class="t-tagline">Shinpo</div>
         <div class="t-caption muted">Quiet progress, every day.</div>
         <div class="t-fine muted">Version 1.0</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SCHEDULE -->
+  <section class="screen surface-canvas hidden" data-screen="schedule">
+    <button class="nav-back" data-back>
+      <svg viewBox="0 0 24 24" fill="none"><path d="M15 5l-7 7 7 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>Home</span>
+    </button>
+    <div class="screen-content schedule-content">
+      <h1 class="screen-title t-display-md">Schedule</h1>
+
+      <div class="group-header" style="margin-top:0;"><span class="label-caps">Today</span></div>
+      <div class="group-card" id="schedule-toggles"></div>
+
+      <div class="group-card" id="sch-work-card" style="margin-top:12px;">
+        <div class="group-row settings-row last">
+          <div class="row-title">Work hours</div>
+          <div class="row-value sch-time-row">
+            <input type="time" id="sch-work-start" class="sch-time-input" />
+            <span class="muted">–</span>
+            <input type="time" id="sch-work-end" class="sch-time-input" />
+          </div>
+        </div>
+      </div>
+
+      <button class="primary-pill full" id="sch-generate" style="margin-top:16px;">Generate</button>
+
+      <div class="t-caption muted schedule-note hidden" id="schedule-note"></div>
+
+      <div class="group-header"><span class="label-caps">Plan</span></div>
+      <div class="timeline">
+        <div class="timeline-hours" id="schedule-hours"></div>
+        <div class="timeline-blocks" id="schedule-blocks"></div>
       </div>
     </div>
   </section>
@@ -287,6 +337,7 @@
   <script src="./atier.js"></script>
   <script src="./routines.js"></script>
   <script src="./calendar.js"></script>
+  <script src="./schedule.js"></script>
   <script src="./settings.js"></script>
   <script src="./nav.js"></script>
   <script src="./app.js"></script>

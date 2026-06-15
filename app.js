@@ -21,6 +21,7 @@
     Routines.render();
   });
   Calendar.init(data);
+  Schedule.init(data, persist);
   Nav.setup(data, persist);
   registerServiceWorker();
 })();
