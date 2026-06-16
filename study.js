@@ -167,6 +167,30 @@ const Study = (() => {
     return focusMinutes >= 60 ? 15 : 5;
   }
 
+  // ── push scheduling (fail-silent — foreground chime is the primary UX) ────────
+  const PUSH_WORKER_URL = 'https://shinpo-push.shinpoimprovement.workers.dev';
+
+  function schedulePush(fireAt) {
+    if (!('serviceWorker' in navigator) || !('PushManager' in window)) return;
+    navigator.serviceWorker.ready
+      .then((reg) => reg.pushManager.getSubscription())
+      .then((sub) => {
+        if (!sub) return;
+        return fetch(`${PUSH_WORKER_URL}/schedule`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ fireAt }),
+        });
+      })
+      .catch(() => {});
+  }
+
+  function cancelPush() {
+    if (!('serviceWorker' in navigator)) return;
+    fetch(`${PUSH_WORKER_URL}/cancel`, { method: 'POST' }).catch(() => {});
+  }
+  // ─────────────────────────────────────────────────────────────────────────────
+
   function getRemainingMs() {
     if (!timer) return 0;
     if (timer.paused) return timer.remainingMs;
@@ -204,6 +228,7 @@ const Study = (() => {
     persistTimerState();
     showFocusScreen();
     timer.intervalId = setInterval(tickTimer, 1000);
+    schedulePush(timer.endTime);
   }
 
   function tickTimer() {
@@ -242,6 +267,7 @@ const Study = (() => {
     timer.intervalId = null;
 
     if (timer.mode === 'focus') {
+      cancelPush(); // app is in foreground — chime covers it, no push needed
       playChime();
       bankSession();
 
@@ -289,6 +315,7 @@ const Study = (() => {
     // "Cancel" during focus banks elapsed minutes (partial credit), then closes.
     clearInterval(timer.intervalId);
     timer.intervalId = null;
+    cancelPush();
     bankSession();
     data.study.activeTimer = null;
     persist();
@@ -311,11 +338,13 @@ const Study = (() => {
       // Resume: set new endTime from frozen remainingMs
       timer.endTime = Date.now() + timer.remainingMs;
       timer.paused = false;
+      schedulePush(timer.endTime);
     } else {
       // Pause: freeze remaining ms, clear endTime
       timer.remainingMs = Math.max(0, timer.endTime - Date.now());
       timer.endTime = null;
       timer.paused = true;
+      cancelPush();
     }
     persistTimerState();
     const btn = document.getElementById('focus-pause');

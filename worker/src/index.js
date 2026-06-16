@@ -166,6 +166,47 @@ export default {
       }
     }
 
+    // Schedule a push to fire at a specific epoch-ms timestamp.
+    // Body: { fireAt: <epoch ms> }
+    if (path === '/schedule' && request.method === 'POST') {
+      try {
+        const { fireAt } = await request.json();
+        if (!fireAt) return new Response('Missing fireAt', { status: 400, headers: CORS });
+        await env.SHINPO_KV.put('pending_push', JSON.stringify({ fireAt }));
+        return new Response('Scheduled', { headers: CORS });
+      } catch (e) {
+        return new Response(e.message, { status: 500, headers: CORS });
+      }
+    }
+
+    // Cancel any pending scheduled push.
+    if (path === '/cancel' && request.method === 'POST') {
+      await env.SHINPO_KV.delete('pending_push');
+      return new Response('Cancelled', { headers: CORS });
+    }
+
     return new Response('Not found', { status: 404, headers: CORS });
+  },
+
+  // Cron trigger — runs every minute, sends any push whose fireAt has passed.
+  async scheduled(event, env, ctx) {
+    const raw = await env.SHINPO_KV.get('pending_push');
+    if (!raw) return;
+
+    let fireAt;
+    try { ({ fireAt } = JSON.parse(raw)); } catch (_) { return; }
+    if (Date.now() < fireAt) return; // not due yet
+
+    // Delete first so a slow push can't fire twice on the next tick.
+    await env.SHINPO_KV.delete('pending_push');
+
+    const subJson = await env.SHINPO_KV.get('push_subscription');
+    if (!subJson) return;
+
+    await sendPush(
+      JSON.parse(subJson),
+      JSON.stringify({ title: 'Shinpo', body: 'Study block done — take your break' }),
+      env,
+    );
   },
 };

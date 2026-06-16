@@ -8,6 +8,10 @@ compatibility_date = "2025-11-01"
 binding = "SHINPO_KV"
 id = "61c73ec10fc7469e8041bd19a7c77ce2"
 
+[triggers]
+# Fires every minute — delivers any pending push whose fireAt has passed
+crons = ["* * * * *"]
+
 [vars]
 VAPID_PUBLIC_KEY = "BC0GNdEDR-PAb8mWd_RptsRhrHgFigWck-o_e1ZBGW1kfDOBJffW4IXygDnMMdqsTQnu5fphnu6GNio8OztS-wk"
 VAPID_SUBJECT    = "mailto:sawpugrad@gmail.com"
