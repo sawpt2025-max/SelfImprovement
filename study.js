@@ -5,7 +5,10 @@ const Study = (() => {
   let persist;
   let selectedMinutes = 30; // default
 
-  let timer = null; // { mode, totalSeconds, remainingSeconds, elapsedFocusSeconds, paused }
+  // timer = null | { mode, focusMinutes, endTime, remainingMs, paused, notes, intervalId }
+  // endTime: absolute ms timestamp when the current phase ends (null when paused)
+  // remainingMs: frozen snapshot of remaining ms — updated on pause, used on resume
+  let timer = null;
 
   // --- date helpers ---
 
@@ -164,88 +167,117 @@ const Study = (() => {
     return focusMinutes >= 60 ? 15 : 5;
   }
 
+  function getRemainingMs() {
+    if (!timer) return 0;
+    if (timer.paused) return timer.remainingMs;
+    return Math.max(0, timer.endTime - Date.now());
+  }
+
+  function persistTimerState() {
+    data.study.activeTimer = timer ? {
+      mode: timer.mode,
+      focusMinutes: timer.focusMinutes,
+      endTime: timer.endTime,
+      remainingMs: timer.remainingMs,
+      paused: timer.paused,
+      notes: timer.notes,
+    } : null;
+    persist();
+  }
+
   function startSession() {
     const minutes = selectedMinutes;
     if (!minutes || minutes <= 0) return;
 
+    const totalMs = minutes * 60 * 1000;
     timer = {
       mode: 'focus',
       focusMinutes: minutes,
-      totalSeconds: minutes * 60,
-      remainingSeconds: minutes * 60,
-      elapsedFocusSeconds: 0,
+      endTime: Date.now() + totalMs,
+      remainingMs: totalMs,
       paused: false,
+      notes: '',
+      intervalId: null,
     };
 
     document.getElementById('focus-notes').value = '';
+    persistTimerState();
     showFocusScreen();
     timer.intervalId = setInterval(tickTimer, 1000);
   }
 
   function tickTimer() {
     if (!timer || timer.paused) return;
+    syncFromTimestamp();
+  }
 
-    timer.remainingSeconds -= 1;
-    if (timer.mode === 'focus') {
-      timer.elapsedFocusSeconds += 1;
-    }
-
-    if (timer.remainingSeconds <= 0) {
-      timer.remainingSeconds = 0;
-      updateFocusDisplay();
-      handleTimerComplete();
-      return;
-    }
-
+  // Called on every tick AND on visibility/pageshow/focus events — always derives
+  // remaining time from the absolute endTime, never from tick counts.
+  function syncFromTimestamp() {
+    if (!timer || timer.paused) return;
     updateFocusDisplay();
+    if (getRemainingMs() <= 0) {
+      handleTimerComplete();
+    }
   }
 
   function updateFocusDisplay() {
-    const seconds = Math.max(0, timer.remainingSeconds);
-    document.getElementById('focus-time').textContent = formatClock(seconds);
-    document.getElementById('focus-label').textContent =
-      timer.mode === 'focus' ? 'Focus' : 'Break';
+    const remainingMs = getRemainingMs();
+    const totalMs = (timer.mode === 'focus'
+      ? timer.focusMinutes
+      : breakMinutesFor(timer.focusMinutes)) * 60 * 1000;
+
+    document.getElementById('focus-time').textContent = formatClock(Math.ceil(remainingMs / 1000));
+    document.getElementById('focus-label').textContent = timer.mode === 'focus' ? 'Focus' : 'Break';
     document.getElementById('focus-notes').classList.toggle('hidden', timer.mode !== 'focus');
 
-    const elapsed = timer.totalSeconds - timer.remainingSeconds;
-    const pct = Math.min(100, (elapsed / timer.totalSeconds) * 100);
+    const elapsed = totalMs - remainingMs;
+    const pct = Math.min(100, (elapsed / totalMs) * 100);
     document.getElementById('focus-progress-fill').style.width = `${pct}%`;
   }
 
   function handleTimerComplete() {
+    if (!timer) return;
     clearInterval(timer.intervalId);
+    timer.intervalId = null;
 
     if (timer.mode === 'focus') {
       playChime();
       bankSession();
 
-      const breakMinutes = breakMinutesFor(timer.focusMinutes);
+      const breakMs = breakMinutesFor(timer.focusMinutes) * 60 * 1000;
       timer = {
         mode: 'break',
         focusMinutes: timer.focusMinutes,
-        totalSeconds: breakMinutes * 60,
-        remainingSeconds: breakMinutes * 60,
-        elapsedFocusSeconds: 0,
+        endTime: Date.now() + breakMs,
+        remainingMs: breakMs,
         paused: false,
+        notes: '',
+        intervalId: null,
       };
+      persistTimerState();
       updateFocusDisplay();
       timer.intervalId = setInterval(tickTimer, 1000);
     } else {
       // break finished — quietly close
+      data.study.activeTimer = null;
+      persist();
       hideFocusScreen();
       timer = null;
     }
   }
 
   function bankSession() {
-    const minutes = timer.elapsedFocusSeconds / 60;
+    const remainingMs = getRemainingMs();
+    const totalMs = timer.focusMinutes * 60 * 1000;
+    const minutes = (totalMs - remainingMs) / 60000;
     if (minutes > 0) {
       data.study.weekMinutes += minutes;
       data.study.totalMinutes += minutes;
       data.study.sessions.push({
         date: new Date().toISOString(),
         durationMinutes: minutes,
-        notes: document.getElementById('focus-notes').value.trim(),
+        notes: timer.notes,
       });
     }
     Checkin.markDone('study');
@@ -256,29 +288,46 @@ const Study = (() => {
   function endFocusEarly() {
     // "Cancel" during focus banks elapsed minutes (partial credit), then closes.
     clearInterval(timer.intervalId);
+    timer.intervalId = null;
     bankSession();
+    data.study.activeTimer = null;
+    persist();
     hideFocusScreen();
     timer = null;
   }
 
   function cancelBreak() {
     clearInterval(timer.intervalId);
+    timer.intervalId = null;
+    data.study.activeTimer = null;
+    persist();
     hideFocusScreen();
     timer = null;
   }
 
   function togglePause() {
     if (!timer) return;
-    timer.paused = !timer.paused;
+    if (timer.paused) {
+      // Resume: set new endTime from frozen remainingMs
+      timer.endTime = Date.now() + timer.remainingMs;
+      timer.paused = false;
+    } else {
+      // Pause: freeze remaining ms, clear endTime
+      timer.remainingMs = Math.max(0, timer.endTime - Date.now());
+      timer.endTime = null;
+      timer.paused = true;
+    }
+    persistTimerState();
     const btn = document.getElementById('focus-pause');
     btn.innerHTML = timer.paused ? Icons.play : Icons.pause;
     btn.setAttribute('aria-label', timer.paused ? 'Resume' : 'Pause');
   }
 
   function showFocusScreen() {
+    const paused = timer && timer.paused;
     const btn = document.getElementById('focus-pause');
-    btn.innerHTML = Icons.pause;
-    btn.setAttribute('aria-label', 'Pause');
+    btn.innerHTML = paused ? Icons.play : Icons.pause;
+    btn.setAttribute('aria-label', paused ? 'Resume' : 'Pause');
     updateFocusDisplay();
     document.getElementById('focus-screen').classList.remove('hidden');
   }
@@ -289,9 +338,7 @@ const Study = (() => {
 
   function setupFocusScreen() {
     document.getElementById('start-session').addEventListener('click', startSession);
-
     document.getElementById('focus-pause').addEventListener('click', togglePause);
-
     document.getElementById('focus-cancel').addEventListener('click', () => {
       if (!timer) return;
       if (timer.mode === 'focus') {
@@ -300,6 +347,51 @@ const Study = (() => {
         cancelBreak();
       }
     });
+    // Keep timer.notes in sync so bankSession() always gets the latest value
+    document.getElementById('focus-notes').addEventListener('input', () => {
+      if (timer) {
+        timer.notes = document.getElementById('focus-notes').value;
+        persistTimerState();
+      }
+    });
+  }
+
+  function restoreTimerState() {
+    const saved = data.study.activeTimer;
+    if (!saved) return;
+
+    timer = {
+      mode: saved.mode,
+      focusMinutes: saved.focusMinutes,
+      endTime: saved.endTime,
+      remainingMs: saved.remainingMs,
+      paused: saved.paused,
+      notes: saved.notes || '',
+      intervalId: null,
+    };
+
+    document.getElementById('focus-notes').value = timer.notes;
+    showFocusScreen();
+
+    if (timer.paused) {
+      // Display frozen time; interval starts when user resumes
+    } else {
+      const remaining = getRemainingMs();
+      if (remaining <= 0) {
+        // Expired while backgrounded — defer past all module init calls
+        setTimeout(() => { if (timer) handleTimerComplete(); }, 0);
+      } else {
+        timer.intervalId = setInterval(tickTimer, 1000);
+      }
+    }
+  }
+
+  function setupVisibilityHandlers() {
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible') syncFromTimestamp();
+    });
+    window.addEventListener('pageshow', () => syncFromTimestamp());
+    window.addEventListener('focus', () => syncFromTimestamp());
   }
 
   // --- init ---
@@ -311,6 +403,8 @@ const Study = (() => {
     setupDurationButtons();
     setupTotalPopup();
     setupFocusScreen();
+    setupVisibilityHandlers();
+    restoreTimerState();
     render();
   }
 

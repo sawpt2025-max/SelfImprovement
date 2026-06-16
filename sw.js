@@ -1,5 +1,5 @@
 // sw.js — minimal offline cache for the app shell
-const CACHE_NAME = 'shinpo-v8';
+const CACHE_NAME = 'shinpo-v9';
 const ASSETS = [
   './',
   './index.html',

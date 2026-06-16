@@ -13,6 +13,7 @@ const DEFAULT_DATA = {
     weekMinutes: 0,
     totalMinutes: 0,
     sessions: [], // { date, durationMinutes, notes }
+    activeTimer: null, // persisted timer state; null when no session is running
   },
   checkin: {
     date: null, // ISO date the current check-in state applies to
