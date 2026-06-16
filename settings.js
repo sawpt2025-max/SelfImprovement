@@ -7,7 +7,7 @@ const Settings = (() => {
 
   // ── push notification config ─────────────────────────────────────────────────
   // Update PUSH_WORKER_URL after running `wrangler deploy` in /worker.
-  const PUSH_WORKER_URL  = 'https://shinpo-push.REPLACE_WITH_YOUR_SUBDOMAIN.workers.dev';
+  const PUSH_WORKER_URL  = 'https://shinpo-push.shinpoimprovement.workers.dev';
   const VAPID_PUBLIC_KEY = 'BC0GNdEDR-PAb8mWd_RptsRhrHgFigWck-o_e1ZBGW1kfDOBJffW4IXygDnMMdqsTQnu5fphnu6GNio8OztS-wk';
 
   function urlBase64ToUint8Array(b64u) {
