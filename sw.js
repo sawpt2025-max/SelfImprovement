@@ -1,5 +1,5 @@
 // sw.js — minimal offline cache for the app shell
-const CACHE_NAME = 'shinpo-v9';
+const CACHE_NAME = 'shinpo-v10';
 const ASSETS = [
   './',
   './index.html',
@@ -54,6 +54,35 @@ self.addEventListener('fetch', (event) => {
         caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
         return response;
       }).catch(() => cached);
+    })
+  );
+});
+
+// iOS kills the subscription if a push ever arrives without showing a notification.
+self.addEventListener('push', (event) => {
+  let title = 'Shinpo';
+  let body  = 'Time to focus.';
+  try {
+    const payload = event.data && event.data.json();
+    if (payload && payload.title) title = payload.title;
+    if (payload && payload.body)  body  = payload.body;
+  } catch (_) {}
+
+  event.waitUntil(
+    self.registration.showNotification(title, {
+      body,
+      icon:  './icons/icon-192.png',
+      badge: './icons/icon-192.png',
+    })
+  );
+});
+
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close();
+  event.waitUntil(
+    clients.matchAll({ type: 'window', includeUncontrolled: true }).then((list) => {
+      for (const c of list) if ('focus' in c) return c.focus();
+      if (clients.openWindow) return clients.openWindow('./');
     })
   );
 });

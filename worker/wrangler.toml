@@ -1,0 +1,17 @@
+name             = "shinpo-push"
+main             = "src/index.js"
+compatibility_date = "2025-11-01"
+
+# Step 1 — create the KV namespace, then paste the id below:
+#   wrangler kv namespace create SHINPO_KV
+[[kv_namespaces]]
+binding = "SHINPO_KV"
+id      = "REPLACE_WITH_KV_NAMESPACE_ID"
+
+[vars]
+VAPID_PUBLIC_KEY = "BC0GNdEDR-PAb8mWd_RptsRhrHgFigWck-o_e1ZBGW1kfDOBJffW4IXygDnMMdqsTQnu5fphnu6GNio8OztS-wk"
+VAPID_SUBJECT    = "mailto:sawpugrad@gmail.com"
+
+# Step 2 — set the private key as a secret (never commit it):
+#   wrangler secret put VAPID_PRIVATE_KEY
+#   (paste the private key when prompted)
